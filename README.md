@@ -28,3 +28,8 @@ docker-compose up --build
 ```
 docker-compose down
 ```
+Если еще удалить volume
+
+```
+docker-compose down -v
+```
