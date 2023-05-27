@@ -1,0 +1,46 @@
+# docker-compose.yml
+
+version: '3.8'
+
+services:
+  web:
+    container_name: api
+    build: ./backend
+    command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; uvicorn main:app --host 0.0.0.0'
+    volumes:
+      - .:/app
+    ports:
+      - "8008:8000"
+    env_file: .env
+    depends_on:
+      - db
+      - redis
+
+  db:
+    image: postgres:13-alpine
+    container_name: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    expose:
+      - 5432
+    restart: always
+    env_file: .env
+
+  redis:
+    image: redis
+    container_name: redis
+    env_file: .env
+    expose:
+      - 6379
+
+  adminer:
+    image: adminer
+    container_name: adminer
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres_data:
