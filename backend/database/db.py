@@ -17,8 +17,5 @@ Base = declarative_base()
 
 
 def get_session():
-    session = Session()
-    try:
+    with Session() as session:
         yield session
-    finally:
-        session.close()

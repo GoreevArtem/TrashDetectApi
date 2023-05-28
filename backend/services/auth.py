@@ -33,7 +33,7 @@ class AuthService:
     def register_new_user(
             self,
             payload: schemas.CreateUserSchema
-    ) -> schemas.UserResponse:
+    ) -> schemas.UserResponseSchema:
         if self.__get_user_by_email(payload):
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
@@ -54,7 +54,7 @@ class AuthService:
             payload: schemas.LoginUserSchema,
             response: Response,
 
-    ) -> schemas.Token:
+    ) -> schemas.TokenSchema:
         user = self.__get_user_by_email(payload)
 
         if not user:
@@ -84,9 +84,9 @@ class AuthService:
                             settings.ACCESS_TOKEN_EXPIRES_IN * 60, '/', None, False, False, 'lax')
 
         # Send both access
-        return schemas.Token(access_token=access_token)
+        return schemas.TokenSchema(access_token=access_token)
 
-    def refresh_token(self, response: Response) -> schemas.Token:
+    def refresh_token(self, response: Response) -> schemas.TokenSchema:
         try:
             self.Authorize.jwt_refresh_token_required()
 
@@ -114,7 +114,7 @@ class AuthService:
         response.set_cookie('logged_in', 'True', settings.ACCESS_TOKEN_EXPIRES_IN * 60,
                             settings.
                             ACCESS_TOKEN_EXPIRES_IN * 60, '/', None, False, False, 'lax')
-        return schemas.Token(access_token=access_token)
+        return schemas.TokenSchema(access_token=access_token)
 
     def logout(self, response: Response):
         self.Authorize.unset_jwt_cookies()

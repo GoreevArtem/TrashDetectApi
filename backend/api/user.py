@@ -1,10 +1,13 @@
-from fastapi import APIRouter, status
+from fastapi import APIRouter, Response, status, HTTPException
 from fastapi import Depends
+from fastapi_jwt_auth import AuthJWT
+from sqlalchemy import JSON
 
 from database import models
 from database.db import Session, get_session
 from schemas import schemas
-from utils import oauth2
+from services.user import UserService
+from utils import oauth2, utils
 
 router = APIRouter(
     prefix='/user',
@@ -12,18 +15,30 @@ router = APIRouter(
 )
 
 
-def get_user_by_id(db: Session = Depends(get_session), user_id: str = Depends(oauth2.require_user)):
-    return db.query(models.User).filter(models.User.id == user_id).first()
+@router.get('/me', response_model=schemas.UserResponseSchema)
+def get_me(
+        user_service: UserService = Depends(),
+        user_id: int = Depends(oauth2.require_user)
+):
+    return user_service.get_me(user_id)
 
 
-@router.get('/me', response_model=schemas.UserResponse)
-# @cache(expire=60)
-def get_me(db: Session = Depends(get_session), user_id: str = Depends(oauth2.require_user)):
-    return get_user_by_id(db, user_id)
+@router.patch(
+    '/me_update',
+    status_code=status.HTTP_204_NO_CONTENT
+)
+def update_me(
+        response: Response,
+        payload: schemas.UpdateUserSchema,
+        user_service: UserService = Depends(),
+        user_id: int = Depends(oauth2.require_user)
+):
+    return user_service.update_me(response, payload, user_id)
 
 
 @router.delete('/me_delete', status_code=status.HTTP_204_NO_CONTENT)
-def delete_me(db: Session = Depends(get_session), user_id: str = Depends(oauth2.require_user)):
-    user = get_user_by_id(db, user_id)
-    db.delete(user)
-    db.commit()
+def delete_me(
+        user_service: UserService = Depends(),
+        user_id: int = Depends(oauth2.require_user)
+):
+    user_service.delete_me(user_id)
