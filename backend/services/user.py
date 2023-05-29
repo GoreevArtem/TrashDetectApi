@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from fastapi import Depends, HTTPException
 from fastapi import APIRouter, Response, status, Depends
 from fastapi_jwt_auth import AuthJWT
@@ -55,7 +57,7 @@ class UserService:
                     status_code=status.HTTP_409_CONFLICT,
                     detail='Name already exist'
                 )
-            payload.name = payload.name
+            user.name = payload.name
 
         if payload.password is not None:
             if utils.verify_password(payload.password, user.password):
@@ -63,7 +65,7 @@ class UserService:
                     status_code=status.HTTP_409_CONFLICT,
                     detail='The old password has been entered'
                 )
-            payload.password = utils.hash_password(payload.password)
+            user.password = utils.hash_password(payload.password)
 
         if payload.email is not None:
             user_email: JSON = self.session.query(models.User).filter(models.User.email == payload.email).first()
@@ -72,11 +74,9 @@ class UserService:
                     status_code=status.HTTP_409_CONFLICT,
                     detail='Email already exist'
                 )
-            payload.email = payload.email
+            user.email = payload.email
 
-        for field, value in payload:
-            if value is not None:
-                setattr(user, field, value)
+        user.updated_at = datetime.now()
 
         self.Authorize.unset_jwt_cookies()
         response.set_cookie('logged_in', '', -1)

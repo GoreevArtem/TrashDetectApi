@@ -30,11 +30,18 @@ class AuthService:
             models.User.email == EmailStr(payload.email)
         ).first()
 
+    def __get_user_by_name(
+            self,
+            payload: schemas.UserBaseSchema,
+    ):
+        return self.session.query(models.User).filter(
+            models.User.name == payload.name).first()
+
     def register_new_user(
             self,
             payload: schemas.CreateUserSchema
     ) -> schemas.UserResponseSchema:
-        if self.__get_user_by_email(payload):
+        if self.__get_user_by_email(payload) or self.__get_user_by_name(payload):
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
                 detail='Account already exist'

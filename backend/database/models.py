@@ -29,8 +29,8 @@ class Request(Base):
     address = Column(String, nullable=False)
     request_date = Column(TIMESTAMP(timezone=True),
                           nullable=False, server_default=text("now()"))
-
     class_trash = Column(String)
+
     user = relationship("User", back_populates="requests")
 
 

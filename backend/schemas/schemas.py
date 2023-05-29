@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 
 
 class UserBaseSchema(BaseModel):
@@ -20,7 +20,6 @@ class CreateUserSchema(UserBaseSchema):
 
 
 class LoginUserSchema(UserBaseSchema):
-    # email: EmailStr
     password: str
 
 
@@ -31,7 +30,6 @@ class UpdateUserSchema(UserBaseSchema):
 
 
 class UserResponseSchema(UserBaseSchema):
-    # id: int
     created_at: datetime
     updated_at: datetime
 
