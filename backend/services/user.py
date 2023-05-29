@@ -48,28 +48,26 @@ class UserService:
         user: JSON = self.__get_user_by_id(user_id)
         if not user:
             raise HTTPException(status.HTTP_404_NOT_FOUND)
-
         if payload.name is not None:
             user_name: JSON = self.session.query(models.User).filter(models.User.name == payload.name).first()
-            if payload.name == user_name.name:
+            if (user_name is not None) and (payload.name == user_name.name):
                 raise HTTPException(
                     status_code=status.HTTP_409_CONFLICT,
                     detail='Name already exist'
                 )
-
             payload.name = payload.name
 
         if payload.password is not None:
             if utils.verify_password(payload.password, user.password):
                 raise HTTPException(
                     status_code=status.HTTP_409_CONFLICT,
-                    detail='Old password'
+                    detail='The old password has been entered'
                 )
             payload.password = utils.hash_password(payload.password)
 
         if payload.email is not None:
             user_email: JSON = self.session.query(models.User).filter(models.User.email == payload.email).first()
-            if payload.email == user_email.email:
+            if (user_email is not None) and (payload.email == user_email.email):
                 raise HTTPException(
                     status_code=status.HTTP_409_CONFLICT,
                     detail='Email already exist'

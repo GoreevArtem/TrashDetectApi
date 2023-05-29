@@ -5,7 +5,8 @@ from pydantic import BaseModel, EmailStr
 
 
 class UserBaseSchema(BaseModel):
-    name: Optional[str] = None
+    # name: Optional[str] = None
+    name: str
     email: EmailStr
     password: str
 
