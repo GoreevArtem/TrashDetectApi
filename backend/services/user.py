@@ -1,9 +1,8 @@
 from datetime import datetime
 
-from fastapi import Depends, HTTPException
-from fastapi import APIRouter, Response, status, Depends
+from fastapi import HTTPException
+from fastapi import Response, status, Depends
 from fastapi_jwt_auth import AuthJWT
-from sqlalchemy import JSON
 
 from database import models
 from database.db import Session, get_session
@@ -15,43 +14,41 @@ class UserService:
 
     def __init__(
             self,
+            user_id: int = Depends(oauth2.require_user),
             session: Session = Depends(get_session),
             Authorize: AuthJWT = Depends()
     ):
+        self.user_id = user_id
         self.session = session
         self.Authorize = Authorize
 
     def __get_user_by_id(
-            self,
-            user_id: int = Depends(oauth2.require_user)
+            self
     ):
-        return self.session.query(models.User).filter(models.User.id == user_id).first()
+        return self.session.query(models.User).filter(models.User.id == self.user_id).first()
 
     def get_me(
-            self,
-            user_id: int
+            self
     ):
-        return self.__get_user_by_id(user_id)
+        return self.__get_user_by_id()
 
     def delete_me(
             self,
-            user_id: int
     ):
-        user = self.__get_user_by_id(user_id)
+        user = self.__get_user_by_id()
         self.session.delete(user)
         self.session.commit()
 
     def update_me(
             self,
             response: Response,
-            payload: schemas.UpdateUserSchema,
-            user_id: int
+            payload: schemas.UpdateUserSchema
     ):
-        user: JSON = self.__get_user_by_id(user_id)
+        user = self.__get_user_by_id()
         if not user:
             raise HTTPException(status.HTTP_404_NOT_FOUND)
         if payload.name is not None:
-            user_name: JSON = self.session.query(models.User).filter(models.User.name == payload.name).first()
+            user_name = self.session.query(models.User).filter(models.User.name == payload.name).first()
             if (user_name is not None) and (payload.name == user_name.name):
                 raise HTTPException(
                     status_code=status.HTTP_409_CONFLICT,
@@ -68,7 +65,7 @@ class UserService:
             user.password = utils.hash_password(payload.password)
 
         if payload.email is not None:
-            user_email: JSON = self.session.query(models.User).filter(models.User.email == payload.email).first()
+            user_email = self.session.query(models.User).filter(models.User.email == payload.email).first()
             if (user_email is not None) and (payload.email == user_email.email):
                 raise HTTPException(
                     status_code=status.HTTP_409_CONFLICT,

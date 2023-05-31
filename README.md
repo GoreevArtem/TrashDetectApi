@@ -12,19 +12,22 @@ git clone https://github.com/GoreevArtem/TrashDetectApi
 cd TrashDetectApi/
 ```
 
-### Установка зависимостей
-```
-pip install -r requirements.txt
-```
+[//]: # (### Установка зависимостей)
 
-### Запуск докера
+[//]: # (```)
 
-```
-docker-compose up --build
-```
+[//]: # (pip install -r requirements.txt)
 
-### Убить запущенные контейнеры
+[//]: # (```)
+
+### Запуск бэкенда
 
 ```
-docker-compose down
+make up
+```
+
+### Убить бэкенд
+
+```
+make down
 ```

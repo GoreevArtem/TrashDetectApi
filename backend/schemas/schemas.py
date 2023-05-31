@@ -1,17 +1,18 @@
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
 from pydantic import BaseModel, EmailStr, Field
 
 
-class UserBaseSchema(BaseModel):
-    # name: Optional[str] = None
-    name: str
-    email: EmailStr
-    password: str
-
+class OrmMode(BaseModel):
     class Config:
         orm_mode = True
+
+
+class UserBaseSchema(OrmMode):
+    name: Optional[str] = None
+    email: EmailStr
+    password: str
 
 
 class CreateUserSchema(UserBaseSchema):
@@ -24,7 +25,6 @@ class LoginUserSchema(UserBaseSchema):
 
 
 class UpdateUserSchema(UserBaseSchema):
-    name: Optional[str]
     email: Optional[EmailStr]
     password: Optional[str]
 
@@ -37,3 +37,9 @@ class UserResponseSchema(UserBaseSchema):
 class TokenSchema(BaseModel):
     access_token: str
     token_type: str = 'bearer'
+
+
+class CreateRequest(OrmMode):
+    # id: int
+    address: str
+    class_trash: Optional[str]

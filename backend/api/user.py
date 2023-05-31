@@ -1,13 +1,9 @@
-from fastapi import APIRouter, Response, status, HTTPException
+from fastapi import APIRouter, Response, status
 from fastapi import Depends
-from fastapi_jwt_auth import AuthJWT
-from sqlalchemy import JSON
 
-from database import models
-from database.db import Session, get_session
 from schemas import schemas
 from services.user import UserService
-from utils import oauth2, utils
+from utils import oauth2
 
 router = APIRouter(
     prefix='/user',
@@ -17,10 +13,9 @@ router = APIRouter(
 
 @router.get('/me', response_model=schemas.UserResponseSchema)
 def get_me(
-        user_service: UserService = Depends(),
-        user_id: int = Depends(oauth2.require_user)
+        user_service: UserService = Depends()
 ):
-    return user_service.get_me(user_id)
+    return user_service.get_me()
 
 
 @router.patch(
@@ -30,15 +25,13 @@ def get_me(
 def update_me(
         response: Response,
         payload: schemas.UpdateUserSchema,
-        user_service: UserService = Depends(),
-        user_id: int = Depends(oauth2.require_user)
+        user_service: UserService = Depends()
 ):
-    return user_service.update_me(response, payload, user_id)
+    return user_service.update_me(response, payload)
 
 
 @router.delete('/me_delete', status_code=status.HTTP_204_NO_CONTENT)
 def delete_me(
-        user_service: UserService = Depends(),
-        user_id: int = Depends(oauth2.require_user)
+        user_service: UserService = Depends()
 ):
-    user_service.delete_me(user_id)
+    user_service.delete_me()
