@@ -22,7 +22,7 @@ class User(Base):
     updated_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text("now()"))
 
-    requests = relationship('Request', backref = 'user')
+    requests = relationship('Request', back_populates = "user")
 
 
 class Request(Base):
@@ -34,7 +34,9 @@ class Request(Base):
                           nullable=False, server_default=text("now()"))
 
     class_trash = Column(String)
+
     user_id = Column(UUID(as_uuid=True), ForeignKey("user.id"))
+    user = relationship("User", back_populates = "requests")
 
     status = Column(Boolean, default=False)
 

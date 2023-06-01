@@ -22,13 +22,13 @@ class RequestService:
             self,
             new_request: schemas.CreateRequest
     ) -> schemas.CreateRequest:
-        new_request = models.Request(**new_request.dict())
-        new_request.request_date = datetime.now()
-        new_request.user_id = self.user_id
+        user = self.session.query(models.User).filter(models.User.id == self.user_id).first()
 
-        self.session.add(new_request)
+        user.requests.extend([models.Request(**new_request.dict())])
+
+        self.session.add(user)
         self.session.commit()
-        self.session.refresh(new_request)
+        self.session.refresh(user)
 
         return new_request
 
