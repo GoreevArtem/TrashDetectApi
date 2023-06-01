@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from typing import List, Optional
 from fastapi import Depends
 
 from database import models
@@ -20,13 +21,19 @@ class RequestService:
     def create_new_request(
             self,
             new_request: schemas.CreateRequest
-    ):
-        _request = models.Request(**new_request.dict())
-        _request.request_date = datetime.now()
-        _request.user_id = self.user_id
+    ) -> schemas.CreateRequest:
+        new_request = models.Request(**new_request.dict())
+        new_request.request_date = datetime.now()
+        new_request.user_id = self.user_id
 
-        self.session.add(_request)
+        self.session.add(new_request)
         self.session.commit()
-        self.session.refresh(_request)
+        self.session.refresh(new_request)
 
-        return _request
+        return new_request
+
+    def get_request(self, limit: int = 10) -> Optional[List[schemas.Request]]:
+        try:
+            return self.session.query(models.Request).filter(models.Request.user_id == self.user_id).limit(limit).all()
+        except:
+            return None

@@ -43,3 +43,8 @@ class CreateRequest(OrmMode):
     # id: int
     address: str
     class_trash: Optional[str]
+
+
+class Request(CreateRequest):
+    request_date: datetime
+    status: bool
