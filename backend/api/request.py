@@ -1,8 +1,14 @@
-from fastapi import APIRouter, status, Depends
 from typing import Optional, List
 
+from fastapi import APIRouter, status, Depends
+from fastapi.encoders import jsonable_encoder
+from fastapi.responses import JSONResponse
+
+from database.redis import redis_startup
 from schemas import schemas
 from services.request import RequestService
+
+from redis.commands.json.path import Path
 
 router = APIRouter(
     prefix='/request',
@@ -31,4 +37,9 @@ async def get_request(
         limit: int = 10,
         request_service: RequestService = Depends()
 ):
-    return request_service.get_request(limit)
+    key = str(request_service.user_id) + "get_request"
+    if redis_startup.json().get(key) is None:
+        data = request_service.get_request(limit)
+        redis_startup.json().set(key, Path.root_path(), jsonable_encoder(data))
+        redis_startup.expire(key, 40)
+    return JSONResponse(redis_startup.json().get(key))

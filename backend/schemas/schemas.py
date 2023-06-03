@@ -1,7 +1,8 @@
 from datetime import datetime
-from typing import Optional, Union
+from enum import Enum
+from typing import Optional, List
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr
 
 
 class OrmMode(BaseModel):
@@ -16,8 +17,7 @@ class UserBaseSchema(OrmMode):
 
 
 class CreateUserSchema(UserBaseSchema):
-    role: str = 'user'
-    verified: bool = False
+    pass
 
 
 class LoginUserSchema(UserBaseSchema):
@@ -40,11 +40,32 @@ class TokenSchema(BaseModel):
 
 
 class CreateRequest(OrmMode):
-    # id: int
     address: str
+    photo_names: Optional[str]
     class_trash: Optional[str]
 
 
-class Request(CreateRequest):
+class OperationKind(str, Enum):
+    NOTVIEW = 'not view'
+    VIEW = 'view'
+    CLEAN = 'clean'
+
+
+class Address(OrmMode):
+    address_region: Optional[str]
+    address_city: Optional[str]
+    address_street: Optional[str]
+    address_city_district: Optional[str]
+    address_house_number: Optional[str]
+
+
+class Request(OrmMode):
+    id: int
+    address: Address
+    photo_names: Optional[str]
+    class_trash: Optional[str]
     request_date: datetime
-    status: bool
+    region_operator: Optional[int]
+    expert: Optional[str]
+    status: Optional[OperationKind]
+

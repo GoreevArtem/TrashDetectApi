@@ -28,7 +28,7 @@ services:
     env_file: .env
 
   redis:
-    image: redis
+    image: redis/redis-stack:latest
     container_name: redis
     env_file: .env
     expose:

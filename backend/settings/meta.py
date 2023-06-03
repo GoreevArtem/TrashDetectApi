@@ -9,6 +9,10 @@ tags_metadata = [
     },
     {
         'name': 'user',
-        'description': 'crud операции с пользователем',
+        'description': 'операции пользователя',
+    },
+    {
+        'name': 'request',
+        'description': 'работа с заявками пользователя',
     },
 ]

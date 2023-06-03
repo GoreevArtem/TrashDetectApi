@@ -47,10 +47,12 @@ class AuthService:
                 detail='Account already exist'
             )
         payload.password = utils.hash_password(payload.password)
-        # payload.role = 'user'
-        payload.verified = True
         payload.email = EmailStr(payload.email)
+
         new_user = models.User(**payload.dict())
+        new_user.role = 'user'
+        new_user.verified = True
+
         self.session.add(new_user)
         self.session.commit()
         self.session.refresh(new_user)

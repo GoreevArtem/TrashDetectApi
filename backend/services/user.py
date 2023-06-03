@@ -25,7 +25,7 @@ class UserService:
     def __get_user_by_id(
             self
     ):
-        return self.session.query(models.User).filter(models.User.id == self.user_id).first()
+        return self.session.query(models.User).get(self.user_id)
 
     def get_me(
             self

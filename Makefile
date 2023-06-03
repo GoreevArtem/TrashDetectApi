@@ -1,7 +1,10 @@
-#build:
-#	docker compose -f docker-compose.yml build
+build:
+	docker compose -f docker-compose.yml build
 
 up:
+	docker compose -f docker-compose.yml up -d
+
+debug:
 	docker compose -f docker-compose.yml up --build
 
 down:
