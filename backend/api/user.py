@@ -1,9 +1,8 @@
-from fastapi import APIRouter, status
+from fastapi import APIRouter, Response, status
 from fastapi import Depends
 
-from database import models
-from database.db import Session, get_session
 from schemas import schemas
+from services.user import UserService
 from utils import oauth2
 
 router = APIRouter(
@@ -12,18 +11,27 @@ router = APIRouter(
 )
 
 
-def get_user_by_id(db: Session = Depends(get_session), user_id: str = Depends(oauth2.require_user)):
-    return db.query(models.User).filter(models.User.id == user_id).first()
+@router.get('/me', response_model=schemas.UserResponseSchema)
+def get_me(
+        user_service: UserService = Depends()
+):
+    return user_service.get_me()
 
 
-@router.get('/me', response_model=schemas.UserResponse)
-# @cache(expire=60)
-def get_me(db: Session = Depends(get_session), user_id: str = Depends(oauth2.require_user)):
-    return get_user_by_id(db, user_id)
+@router.patch(
+    '/me_update',
+    status_code=status.HTTP_204_NO_CONTENT
+)
+def update_me(
+        response: Response,
+        payload: schemas.UpdateUserSchema,
+        user_service: UserService = Depends()
+):
+    return user_service.update_me(response, payload)
 
 
 @router.delete('/me_delete', status_code=status.HTTP_204_NO_CONTENT)
-def delete_me(db: Session = Depends(get_session), user_id: str = Depends(oauth2.require_user)):
-    user = get_user_by_id(db, user_id)
-    db.delete(user)
-    db.commit()
+def delete_me(
+        user_service: UserService = Depends()
+):
+    user_service.delete_me()

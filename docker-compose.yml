@@ -7,6 +7,7 @@ services:
     container_name: api
     build: ./backend
     command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; uvicorn main:app --host 0.0.0.0'
+#    command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; gunicorn main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind=0.0.0.0:8000'
     volumes:
       - .:/app
     ports:
@@ -27,7 +28,7 @@ services:
     env_file: .env
 
   redis:
-    image: redis
+    image: redis/redis-stack:latest
     container_name: redis
     env_file: .env
     expose:

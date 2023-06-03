@@ -1,5 +1,5 @@
-from redis import asyncio as aioredis
+import redis
+
 from settings.settings import settings
 
-path = f"redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}"
-redis = aioredis.from_url(path)
+redis_startup = redis.Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, decode_responses=True)
