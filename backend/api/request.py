@@ -37,7 +37,7 @@ async def get_request(
         limit: int = 10,
         request_service: RequestService = Depends()
 ):
-    key = str(request_service.user_id) + "get_request"
+    key = str(request_service.user_id) + "_get_request"
     if redis_startup.json().get(key) is None:
         data = request_service.get_request(limit)
         redis_startup.json().set(key, Path.root_path(), jsonable_encoder(data))
