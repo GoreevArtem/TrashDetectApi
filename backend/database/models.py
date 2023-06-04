@@ -2,7 +2,7 @@ import uuid
 
 from sqlalchemy import Column, Integer, String, TIMESTAMP, text, Boolean, ARRAY, ForeignKey, Table, UniqueConstraint
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 
 from .db import Base
 
@@ -22,7 +22,12 @@ class User(Base):
     updated_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text("now()"))
 
-    requests = relationship('Request', back_populates="user")
+    requests = relationship(
+        'Request',
+        back_populates="user",
+        single_parent=True,
+        cascade="all, delete, delete-orphan"
+    )
 
 
 class Request(Base):
@@ -36,15 +41,43 @@ class Request(Base):
     status = Column(String, default="not view")
 
     user_id = Column(UUID(as_uuid=True), ForeignKey("user.id"))
-    user = relationship("User", back_populates="requests")
+    user = relationship(
+        "User",
+        back_populates="requests",
+        single_parent=True,
+        cascade="all, delete, delete-orphan"
+    )
 
     region_operator_id = Column(Integer, ForeignKey("region_operator.id"))
-    region_operator = relationship("RegionOperator", back_populates="requests")
+    region_operator = relationship(
+        "RegionOperator",
+        back_populates="requests",
+        single_parent=True,
+        cascade="all, delete, delete-orphan"
+    )
 
     address_id = Column(Integer, ForeignKey("address.id"))
-    address = relationship("Address", back_populates="addresses")
+    address = relationship(
+        "Address",
+        back_populates="addresses",
+        single_parent=True,
+        cascade="all, delete, delete-orphan"
+    )
 
-    garbage_classes = relationship("GarbageClass", back_populates="request")
+    garbage_classes = relationship(
+        "GarbageClass",
+        back_populates="request",
+        single_parent=True,
+        cascade="all, delete, delete-orphan"
+    )
+
+
+region_operator_address = Table(
+    "region_operator_address",
+    Base.metadata,
+    Column("address_id", Integer, ForeignKey("address.id")),
+    Column("region_operator_id", Integer, ForeignKey("region_operator.id"))
+)
 
 
 class RegionOperator(Base):
@@ -55,8 +88,48 @@ class RegionOperator(Base):
     reg_oper_number_zone = Column(Integer, nullable=False)
     reg_oper_meaning = Column(String, nullable=False)
 
-    requests = relationship("Request", back_populates="region_operator")
-    experts = relationship("Expert", back_populates="region_operator")
+    zone_region = relationship(
+        'ZoneRegion',
+        back_populates="region",
+        single_parent=True,
+        cascade="all, delete, delete-orphan"
+    )
+
+    requests = relationship(
+        "Request",
+        back_populates="region_operator",
+        single_parent=True,
+        cascade="all, delete, delete-orphan"
+    )
+    experts = relationship(
+        "Expert",
+        back_populates="region_operator",
+        single_parent=True,
+        cascade="all, delete, delete-orphan"
+
+    )
+    addr = relationship(
+        "Address",
+        secondary=region_operator_address,
+        backref=backref("_addresses", lazy="dynamic"),
+        single_parent=True,
+        cascade="all, delete, delete-orphan"
+    )
+
+
+class ZoneRegion(Base):
+    __tablename__ = 'zone_region'
+    id = Column(Integer, primary_key=True, index=True)
+    zone_address_region = Column(String)
+    zone_address_city = Column(String)
+    zone_address_city_district = Column(String)
+    region_operator = Column(Integer, ForeignKey("region_operator.id"))
+    region = relationship(
+        'RegionOperator',
+        back_populates="zone_region",
+        single_parent=True,
+        cascade="all, delete, delete-orphan"
+    )
 
 
 class Expert(Base):
@@ -69,7 +142,12 @@ class Expert(Base):
     verified = Column(Boolean, nullable=False, server_default="True")
 
     region_operator_id = Column(Integer, ForeignKey("region_operator.id"))
-    region_operator = relationship("RegionOperator", back_populates="experts")
+    region_operator = relationship(
+        "RegionOperator",
+        back_populates="experts",
+        single_parent=True,
+        cascade="all, delete, delete-orphan"
+    )
 
 
 class Address(Base):
@@ -80,12 +158,13 @@ class Address(Base):
     address_city = Column(String)
     address_city_district = Column(String)
     address_street = Column(String)
-    address_house_number = Column(String)
+    address_house_number = Column(String, unique=True)
 
-    addresses = relationship('Request', back_populates="address")
-
-    __table_args__ = (
-        UniqueConstraint('address_house_number'),
+    addresses = relationship(
+        'Request',
+        back_populates="address",
+        single_parent=True,
+        cascade="all, delete, delete-orphan"
     )
 
 
@@ -97,10 +176,3 @@ class GarbageClass(Base):
 
     request_id = Column(Integer, ForeignKey("request.id"))
     request = relationship("Request", back_populates="garbage_classes")
-
-
-class RegionOperatorAddress(Base):
-    __tablename__ = "region_operator_address"
-    id = Column(Integer, primary_key=True, index=True)
-    address = Column("address_id", Integer, ForeignKey("address.id")),
-    region_operator = Column("region_operator_id", Integer, ForeignKey("region_operator.id"))

@@ -65,7 +65,6 @@ class Request(OrmMode):
     photo_names: Optional[str]
     class_trash: Optional[str]
     request_date: datetime
-    region_operator: Optional[int]
+    region_operator: Optional[str]
     expert: Optional[str]
     status: Optional[OperationKind]
-

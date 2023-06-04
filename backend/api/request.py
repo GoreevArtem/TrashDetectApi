@@ -1,14 +1,12 @@
-from typing import Optional, List
+from typing import Optional, List, Dict
 
 from fastapi import APIRouter, status, Depends
 from fastapi.encoders import jsonable_encoder
-from fastapi.responses import JSONResponse
+from redis.commands.json.path import Path
 
 from database.redis import redis_startup
 from schemas import schemas
 from services.request import RequestService
-
-from redis.commands.json.path import Path
 
 router = APIRouter(
     prefix='/request',
@@ -31,15 +29,15 @@ async def create_request(
 @router.get(
     '/get_request',
     status_code=status.HTTP_200_OK,
-    response_model=Optional[List[schemas.Request]]
+    response_model=Optional[Dict[str, schemas.Request]]
 )
 async def get_request(
         limit: int = 10,
         request_service: RequestService = Depends()
 ):
-    key = str(request_service.user_id) + "get_request"
+    key = str(request_service.user_id) + "_get_request_" + str(limit)
     if redis_startup.json().get(key) is None:
         data = request_service.get_request(limit)
         redis_startup.json().set(key, Path.root_path(), jsonable_encoder(data))
-        redis_startup.expire(key, 40)
-    return JSONResponse(redis_startup.json().get(key))
+        redis_startup.expire(key, 30)
+    return redis_startup.json().get(key)
