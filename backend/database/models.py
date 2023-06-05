@@ -24,9 +24,7 @@ class User(Base):
 
     requests = relationship(
         'Request',
-        back_populates="user",
-        single_parent=True,
-        cascade="all, delete, delete-orphan"
+        back_populates="user"
     )
 
 
@@ -43,41 +41,30 @@ class Request(Base):
     user_id = Column(UUID(as_uuid=True), ForeignKey("user.id"))
     user = relationship(
         "User",
-        back_populates="requests",
-        single_parent=True,
-        cascade="all, delete, delete-orphan"
+        back_populates="requests"
     )
 
     region_operator_id = Column(Integer, ForeignKey("region_operator.id"))
     region_operator = relationship(
         "RegionOperator",
-        back_populates="requests",
-        single_parent=True,
-        cascade="all, delete, delete-orphan"
+        back_populates="requests"
     )
 
     address_id = Column(Integer, ForeignKey("address.id"))
     address = relationship(
         "Address",
-        back_populates="addresses",
-        single_parent=True,
-        cascade="all, delete, delete-orphan"
+        back_populates="addresses"
     )
 
     garbage_classes = relationship(
         "GarbageClass",
-        back_populates="request",
-        single_parent=True,
-        cascade="all, delete, delete-orphan"
+        back_populates="request"
     )
-
-
-region_operator_address = Table(
-    "region_operator_address",
-    Base.metadata,
-    Column("address_id", Integer, ForeignKey("address.id")),
-    Column("region_operator_id", Integer, ForeignKey("region_operator.id"))
-)
+    expert_id = Column(UUID(as_uuid=True), ForeignKey("expert.id"))
+    expert = relationship(
+        "Expert",
+        back_populates="requests"
+    )
 
 
 class RegionOperator(Base):
@@ -90,30 +77,16 @@ class RegionOperator(Base):
 
     zone_region = relationship(
         'ZoneRegion',
-        back_populates="region",
-        single_parent=True,
-        cascade="all, delete, delete-orphan"
+        back_populates="region"
     )
 
     requests = relationship(
         "Request",
-        back_populates="region_operator",
-        single_parent=True,
-        cascade="all, delete, delete-orphan"
+        back_populates="region_operator"
     )
     experts = relationship(
         "Expert",
-        back_populates="region_operator",
-        single_parent=True,
-        cascade="all, delete, delete-orphan"
-
-    )
-    addr = relationship(
-        "Address",
-        secondary=region_operator_address,
-        backref=backref("_addresses", lazy="dynamic"),
-        single_parent=True,
-        cascade="all, delete, delete-orphan"
+        back_populates="region_operator"
     )
 
 
@@ -126,9 +99,7 @@ class ZoneRegion(Base):
     region_operator = Column(Integer, ForeignKey("region_operator.id"))
     region = relationship(
         'RegionOperator',
-        back_populates="zone_region",
-        single_parent=True,
-        cascade="all, delete, delete-orphan"
+        back_populates="zone_region"
     )
 
 
@@ -140,13 +111,17 @@ class Expert(Base):
     login = Column(String, unique=True, nullable=False)
     password = Column(String, nullable=False)
     verified = Column(Boolean, nullable=False, server_default="True")
+    count_active_requests = Column(Integer)
 
     region_operator_id = Column(Integer, ForeignKey("region_operator.id"))
     region_operator = relationship(
         "RegionOperator",
-        back_populates="experts",
-        single_parent=True,
-        cascade="all, delete, delete-orphan"
+        back_populates="experts"
+    )
+
+    requests = relationship(
+        'Request',
+        back_populates="expert"
     )
 
 
@@ -162,9 +137,7 @@ class Address(Base):
 
     addresses = relationship(
         'Request',
-        back_populates="address",
-        single_parent=True,
-        cascade="all, delete, delete-orphan"
+        back_populates="address"
     )
 
 

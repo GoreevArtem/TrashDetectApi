@@ -1,6 +1,6 @@
-from typing import Optional, List, Dict
+from typing import Optional, Dict
 
-from fastapi import APIRouter, status, Depends
+from fastapi import APIRouter, status, Depends, UploadFile, File
 from fastapi.encoders import jsonable_encoder
 from redis.commands.json.path import Path
 

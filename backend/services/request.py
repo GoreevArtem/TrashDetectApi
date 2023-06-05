@@ -1,6 +1,8 @@
+import functools
 from typing import List, Optional, Dict
 
 from fastapi import Depends, HTTPException, status
+from sqlalchemy import func
 from sqlalchemy.orm import joinedload
 
 from database import models
@@ -51,20 +53,36 @@ class RequestService:
                 request.address_id = get_id.id
                 self.session.add(user)
 
-            get_reqion_operator_id = self.session.query(models.ZoneRegion).distinct().filter(
+            get_reqion_operator = self.session.query(models.ZoneRegion).distinct().filter(
                 models.ZoneRegion.zone_address_region == address_list[1],
                 models.ZoneRegion.zone_address_city == address_list[-4],
                 models.ZoneRegion.zone_address_city_district == address_list[-3]
-            ).one_or_none()
+            ).first()
 
-            if get_reqion_operator_id is not None:
-                get_reqion_operator = self.session.query(models.RegionOperator).get(get_reqion_operator_id.id)
+            if get_reqion_operator is not None:
+                get_reqion_operator = self.session.query(models.RegionOperator).get(get_reqion_operator.region_operator)
                 get_reqion_operator.requests.extend([request])
                 self.session.add(get_reqion_operator)
             else:
                 raise HTTPException(
                     status_code=status.HTTP_404_NOT_FOUND,
                     detail='Region operator not found'
+                )
+            min_count_active_requests = self.session.query(func.min(models.Expert.count_active_requests)).filter(
+                models.Expert.region_operator_id == get_reqion_operator.id).first()
+            if min_count_active_requests is not None:
+                min_count_active_requests = functools.reduce(lambda x: x, min_count_active_requests)
+                expert = self.session.query(models.Expert).filter(
+                    models.Expert.region_operator_id == get_reqion_operator.id,
+                    models.Expert.count_active_requests == min_count_active_requests
+                ).first()
+                expert.count_active_requests += 1
+                expert.requests.extend([request])
+                self.session.add(expert)
+            else:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail='Expert not found'
                 )
 
             self.session.commit()
@@ -79,14 +97,24 @@ class RequestService:
     def get_request(self, limit: int = 10) -> Optional[Dict[str, schemas.Request]]:
         try:
             data = self.session.query(models.Request) \
-                .options(joinedload(models.Request.address), joinedload(models.Request.region_operator)) \
+                .options(
+                joinedload(models.Request.address),
+                joinedload(models.Request.region_operator),
+                joinedload(models.Request.expert)
+            ) \
                 .filter(models.Request.user_id == self.user_id) \
                 .order_by(models.Request.id) \
                 .limit(limit).all()
             for region_operator in data:
-                region_operator.__dict__["region_operator"] = \
-                    region_operator.__dict__["region_operator"].__dict__["reg_oper_name"]
-            return dict(zip(range(1, len(data)+1), data))
+                try:
+                    region_operator.__dict__["expert"] = \
+                        region_operator.__dict__["expert"].__dict__["name"]
+                    region_operator.__dict__["region_operator"] = \
+                        region_operator.__dict__["region_operator"].__dict__["reg_oper_name"]
+                except:
+                    region_operator.__dict__["expert"] = None
+                    region_operator.__dict__["region_operator"] = None
+
+            return dict(zip(range(1, len(data) + 1), data))
         except:
             return None
-

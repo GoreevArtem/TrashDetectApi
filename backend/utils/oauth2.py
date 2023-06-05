@@ -40,8 +40,7 @@ def require_user(db: Session = Depends(get_session), Authorize: AuthJWT = Depend
     try:
         Authorize.jwt_required()
         user_id = Authorize.get_jwt_subject()
-
-        user = db.query(models.User).filter(models.User.id == user_id).first()
+        user = db.query(models.User).get(user_id)
 
         if not user:
             raise UserNotFound('User no longer exist')
