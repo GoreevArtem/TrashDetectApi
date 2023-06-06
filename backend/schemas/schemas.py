@@ -68,3 +68,8 @@ class Request(OrmMode):
     region_operator: Optional[str]
     expert: Optional[str]
     status: Optional[OperationKind]
+
+
+class FindClassTrash(OrmMode):
+    name_photo: str
+    trash_classes: str

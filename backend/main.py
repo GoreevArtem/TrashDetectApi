@@ -2,11 +2,12 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 import api
+import utils.create_sourse
 from database.db import engine, Base
 from settings.meta import title, description, version, tags_metadata
 
 app = FastAPI(
-    title=title,
+
     description=description,
     version=version,
     openapi_tags=tags_metadata
@@ -27,3 +28,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.on_event("startup")
+async def app_startup():
+    utils.create_sourse.create_dir(path="../source_users_photo")

@@ -1,10 +1,13 @@
 import functools
+import os.path
 from typing import List, Optional, Dict
 
-from fastapi import Depends, HTTPException, status
+import aiofiles as aiofiles
+from fastapi import Depends, HTTPException, status, UploadFile, File
 from sqlalchemy import func
 from sqlalchemy.orm import joinedload
 
+import utils.create_sourse
 from database import models
 from database.db import Session, get_session
 from schemas import schemas
@@ -106,15 +109,30 @@ class RequestService:
                 .order_by(models.Request.id) \
                 .limit(limit).all()
             for region_operator in data:
-                try:
-                    region_operator.__dict__["expert"] = \
-                        region_operator.__dict__["expert"].__dict__["name"]
-                    region_operator.__dict__["region_operator"] = \
-                        region_operator.__dict__["region_operator"].__dict__["reg_oper_name"]
-                except:
-                    region_operator.__dict__["expert"] = None
-                    region_operator.__dict__["region_operator"] = None
+                region_operator.__dict__["expert"] = \
+                    region_operator.__dict__["expert"].__dict__["name"]
+                region_operator.__dict__["expert"] = None
+                region_operator.__dict__["region_operator"] = \
+                    region_operator.__dict__["region_operator"].__dict__["reg_oper_name"]
 
             return dict(zip(range(1, len(data) + 1), data))
         except:
             return None
+
+    async def detect_trash_on_photo(self, file: UploadFile = File(...)) -> Dict:
+        file.filename = utils.create_sourse.rename_photo(self.user_id, file.filename)
+        os.chdir(os.path.join("..", "source_users_photo"))
+        utils.create_sourse.create_dir(str(self.user_id))
+        file_location = os.path.join("..", "source_users_photo", str(self.user_id), file.filename)
+        async with aiofiles.open(file_location, 'wb') as f:
+            contents = file.file.read()
+            await f.write(contents)
+
+        return {
+            "name_photo": file.filename,
+            "trash_classes": "1, 2, 3"
+        }
+
+    def download_photo(self, upload_name):
+        os.chdir(os.path.join("..", "source_users_photo"))
+        return os.path.join("..", "source_users_photo", str(self.user_id), upload_name)
