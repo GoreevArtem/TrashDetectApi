@@ -23,8 +23,8 @@ def get_me(
     status_code=status.HTTP_204_NO_CONTENT
 )
 def update_me(
-        response: Response,
         payload: schemas.UpdateUserSchema,
+        response: Response,
         user_service: UserService = Depends()
 ):
     return user_service.update_me(response, payload)

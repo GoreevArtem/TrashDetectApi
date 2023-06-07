@@ -22,7 +22,7 @@ async def create_user(
 
 
 @router.post(
-    '/authenticate_user',
+    '/authenticate',
     status_code=status.HTTP_200_OK,
     response_model=schemas.TokenSchema
 )

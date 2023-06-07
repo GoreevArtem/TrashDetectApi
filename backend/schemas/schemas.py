@@ -73,3 +73,16 @@ class Request(OrmMode):
 class FindClassTrash(OrmMode):
     name_photo: str
     trash_classes: str
+
+
+class ExpertBaseSchema(OrmMode):
+    login: str
+
+
+class ExpertSchema(ExpertBaseSchema):
+    name: str
+    password: str
+
+
+class UpdateExpertSchema(ExpertBaseSchema):
+    password: str

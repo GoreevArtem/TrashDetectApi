@@ -9,10 +9,14 @@ tags_metadata = [
     },
     {
         'name': 'user',
-        'description': 'операции пользователя',
+        'description': 'Операции пользователя',
     },
     {
         'name': 'request',
-        'description': 'работа с заявками пользователя',
+        'description': 'Работа пользователя с заявками',
+    },
+    {
+        'name': 'expert',
+        'description': 'Операции эксперта',
     },
 ]

@@ -36,7 +36,10 @@ class UserNotFound(Exception):
     pass
 
 
-def require_user(db: Session = Depends(get_session), Authorize: AuthJWT = Depends()):
+def require_user(
+        db: Session = Depends(get_session),
+        Authorize: AuthJWT = Depends()
+):
     try:
         Authorize.jwt_required()
         user_id = Authorize.get_jwt_subject()

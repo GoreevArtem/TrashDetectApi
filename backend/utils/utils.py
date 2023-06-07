@@ -7,3 +7,8 @@ def hash_password(password: str):
 
 def verify_password(password: str, hashed_password: str):
     return bcrypt.verify(password, hashed_password)
+
+
+if __name__ == "__main__":
+    passwd = input()
+    print(hash_password(passwd), verify_password(passwd, hash_password(passwd)))

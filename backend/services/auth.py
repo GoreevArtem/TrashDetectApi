@@ -37,6 +37,41 @@ class AuthService:
         return self.session.query(models.User).filter(
             models.User.name == payload.name).first()
 
+    @staticmethod
+    def _not_user(user):
+        if not user:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                                detail='Incorrect Email or Password')
+
+    @staticmethod
+    def _user_verified(user):
+        if not user.verified:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                                detail='Please verify your email address')
+
+    @staticmethod
+    def _verify_password(payload, user):
+        if not utils.verify_password(payload.password, user.password):
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                                detail='Incorrect Email or Password')
+
+    def _create_token(self, user, response):
+        access_token = self.Authorize.create_access_token(
+            subject=str(user.id), expires_time=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRES_IN))
+
+        refresh_token = self.Authorize.create_refresh_token(
+            subject=str(user.id), expires_time=timedelta(minutes=settings.REFRESH_TOKEN_EXPIRES_IN))
+
+        # Store refresh and access tokens in cookie
+        response.set_cookie('access_token', access_token, settings.ACCESS_TOKEN_EXPIRES_IN * 60,
+                            settings.ACCESS_TOKEN_EXPIRES_IN * 60, '/', None, False, True, 'lax')
+        response.set_cookie('refresh_token', refresh_token,
+                            settings.REFRESH_TOKEN_EXPIRES_IN * 60, settings.REFRESH_TOKEN_EXPIRES_IN * 60, '/',
+                            None, False, True, 'lax')
+        response.set_cookie('logged_in', 'True', settings.ACCESS_TOKEN_EXPIRES_IN * 60,
+                            settings.ACCESS_TOKEN_EXPIRES_IN * 60, '/', None, False, False, 'lax')
+        return access_token
+
     def register_new_user(
             self,
             payload: schemas.CreateUserSchema
@@ -65,33 +100,10 @@ class AuthService:
 
     ) -> schemas.TokenSchema:
         user = self.__get_user_by_email(payload)
-
-        if not user:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                                detail='Incorrect Email or Password')
-
-        if not user.verified:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                detail='Please verify your email address')
-
-        if not utils.verify_password(payload.password, user.password):
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                                detail='Incorrect Email or Password')
-        access_token = self.Authorize.create_access_token(
-            subject=str(user.id), expires_time=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRES_IN))
-
-        refresh_token = self.Authorize.create_refresh_token(
-            subject=str(user.id), expires_time=timedelta(minutes=settings.REFRESH_TOKEN_EXPIRES_IN))
-
-        # Store refresh and access tokens in cookie
-        response.set_cookie('access_token', access_token, settings.ACCESS_TOKEN_EXPIRES_IN * 60,
-                            settings.ACCESS_TOKEN_EXPIRES_IN * 60, '/', None, False, True, 'lax')
-        response.set_cookie('refresh_token', refresh_token,
-                            settings.REFRESH_TOKEN_EXPIRES_IN * 60, settings.REFRESH_TOKEN_EXPIRES_IN * 60, '/',
-                            None, False, True, 'lax')
-        response.set_cookie('logged_in', 'True', settings.ACCESS_TOKEN_EXPIRES_IN * 60,
-                            settings.ACCESS_TOKEN_EXPIRES_IN * 60, '/', None, False, False, 'lax')
-
+        self._not_user(user)
+        self._user_verified(user)
+        self._verify_password(payload, user)
+        access_token = self._create_token(user=user, response=response)
         # Send both access
         return schemas.TokenSchema(access_token=access_token)
 
