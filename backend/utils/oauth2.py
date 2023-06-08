@@ -36,7 +36,8 @@ class UserNotFound(Exception):
     pass
 
 
-def require_user(
+def require(
+        model,
         db: Session = Depends(get_session),
         Authorize: AuthJWT = Depends()
 ):
@@ -66,3 +67,17 @@ def require_user(
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail='Token is invalid or has expired')
     return user_id
+
+
+def require_user(
+        db: Session = Depends(get_session),
+        Authorize: AuthJWT = Depends()
+):
+    return require(models.User, db, Authorize)
+
+
+def require_expert(
+        db: Session = Depends(get_session),
+        Authorize: AuthJWT = Depends()
+):
+    return require(models.Expert, db, Authorize)

@@ -14,12 +14,12 @@ router = APIRouter(
     status_code=status.HTTP_200_OK,
     response_model=schemas.TokenSchema
 )
-async def authenticate_user(
+async def authenticate_expert(
         payload: schemas.ExpertSchema,
         response: Response,
         auth_service: Expert = Depends(),
 ):
-    return auth_service.authenticate_user(payload, response)
+    return auth_service.authenticate_expert(payload, response)
 
 
 @router.get(
@@ -41,11 +41,12 @@ def update_me(
 ):
     return user_service.update_me(response, payload)
 
+
 @router.get(
     '/get_me',
     status_code=status.HTTP_200_OK
 )
-def get_me(
+def update_me(
         payload: schemas.ExpertBaseSchema,
         user_service: Expert = Depends()
 ):

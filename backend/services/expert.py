@@ -1,18 +1,20 @@
-from datetime import timedelta
-
-from fastapi import APIRouter, Response, status, HTTPException
-from pydantic import EmailStr
-
 from database import models
-from database.db import get_session
+from fastapi import Response, status, HTTPException, Depends
 from schemas import schemas
-from settings.settings import settings
-from utils import utils
+from utils import oauth2, utils
 
 from .auth import AuthService
+from .user import UserService
 
 
-class Expert(AuthService):
+class Expert(UserService, AuthService):
+
+    def __init__(self, user_id: int = Depends(oauth2.require_expert)):
+        super().__init__(user_id)
+
+    def __get_user_by_id(self):
+        return self.session.query(models.Expert).get(self.user_id)
+
     def __get_user(
             self,
             payload: schemas.ExpertSchema,
@@ -40,9 +42,7 @@ class Expert(AuthService):
             response: Response,
             payload: schemas.UpdateUserSchema
     ):
-        user = self.session.query(models.Expert).filter(
-            models.Expert.login == payload.login
-        ).first()
+        user = self.__get_user_by_id()
         if payload.password is not None:
             if utils.verify_password(payload.password, user.password):
                 raise HTTPException(
@@ -58,9 +58,6 @@ class Expert(AuthService):
             self.session.refresh(user)
 
     def get_me(
-            self,
-            payload: schemas.ExpertBaseSchema
+            self
     ):
-        return self.session.query(models.Expert).filter(
-            models.Expert.login == payload.login
-        ).first()
+        return self.__get_user_by_id()
