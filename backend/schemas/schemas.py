@@ -84,5 +84,9 @@ class ExpertSchema(ExpertBaseSchema):
     password: str
 
 
-class UpdateExpertSchema(ExpertBaseSchema):
+class RegisterExpertSchema(ExpertSchema):
+    region_operator: Optional[str]
+
+
+class UpdateExpertSchema(OrmMode):
     password: str

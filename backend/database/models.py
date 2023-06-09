@@ -129,7 +129,7 @@ class Expert(Base):
     login = Column(String, unique=True, nullable=False)
     password = Column(String, nullable=False)
     verified = Column(Boolean, nullable=False, server_default="True")
-    count_active_requests = Column(Integer)
+    count_active_requests = Column(Integer, default=0)
 
     region_operator_id = Column(Integer, ForeignKey("region_operator.id", ondelete='CASCADE'))
     region_operator = relationship(

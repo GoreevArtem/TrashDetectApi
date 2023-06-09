@@ -11,7 +11,7 @@ router = APIRouter(
 )
 
 
-@router.get('/me', response_model=schemas.UserResponseSchema)
+@router.get('/me', status_code=status.HTTP_200_OK, response_model=schemas.UserResponseSchema)
 def get_me(
         user_service: UserService = Depends()
 ):

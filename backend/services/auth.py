@@ -93,7 +93,7 @@ class AuthService:
         self.session.refresh(new_user)
         return new_user
 
-    def authenticate_expert(
+    def authenticate_user(
             self,
             payload: schemas.LoginUserSchema,
             response: Response,

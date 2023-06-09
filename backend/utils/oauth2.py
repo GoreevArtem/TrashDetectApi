@@ -44,8 +44,7 @@ def require(
     try:
         Authorize.jwt_required()
         user_id = Authorize.get_jwt_subject()
-        user = db.query(models.User).get(user_id)
-
+        user = db.query(model).get(user_id)
         if not user:
             raise UserNotFound('User no longer exist')
 
