@@ -31,8 +31,8 @@ make up
 ```
 make down
 ```
-Если еще удалить volume
+Остановить его
 
 ```
-docker-compose down -v
+make stop
 ```
