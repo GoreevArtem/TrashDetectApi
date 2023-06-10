@@ -42,6 +42,9 @@ def logout(response: Response, auth_service: Expert = Depends()):
     return auth_service.logout(response)
 
 
+##
+# TODO UPDATE SCHEMAS
+##
 @router.get('/me', status_code=status.HTTP_200_OK)
 def get_me(
         expert_service: ExpertService = Depends()
@@ -59,3 +62,18 @@ def update_me(
         expert_service: ExpertService = Depends()
 ):
     return expert_service.update_me(response, payload)
+
+
+@router.get(
+    '/get_requests'
+)
+def get_requests(expert_service: ExpertService = Depends()):
+    ...
+
+
+def get_request():
+    ...
+
+
+def change_request():
+    ...

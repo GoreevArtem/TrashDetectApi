@@ -1,9 +1,7 @@
 import functools
-from datetime import timedelta
 
-from fastapi import APIRouter, Request, Response, status, Depends, HTTPException
+from fastapi import Response, status, Depends, HTTPException
 from fastapi_jwt_auth import AuthJWT
-from pydantic import EmailStr
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
@@ -12,7 +10,6 @@ from database.db import get_session
 from schemas import schemas
 from services.auth import AuthService
 from services.user import UserService
-from settings.settings import settings
 from utils import utils, oauth2
 
 
