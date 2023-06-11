@@ -36,7 +36,7 @@ class UserResponseSchema(UserBaseSchema):
 
 class TokenSchema(BaseModel):
     access_token: str
-    token_type: str = 'bearer'
+    # token_type: str = 'bearer'
 
 
 class CreateRequest(OrmMode):

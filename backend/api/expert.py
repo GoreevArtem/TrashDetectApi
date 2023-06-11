@@ -65,14 +65,27 @@ def update_me(
 
 
 @router.get(
-    '/get_requests'
+    '/get_all_requests',
+    status_code=status.HTTP_200_OK
 )
-def get_requests(expert_service: ExpertService = Depends()):
-    ...
+def get_requests(limit: int = 10, expert_service: ExpertService = Depends()):
+    return expert_service.get_all_requests(limit)
 
 
-def get_request():
-    ...
+@router.get(
+    '/get_request',
+    status_code=status.HTTP_200_OK
+)
+def get_request(req_id: int, expert_service: ExpertService = Depends()):
+    return expert_service.get_request(req_id)
+
+
+@router.put(
+    '/set_view_status',
+    status_code=status.HTTP_200_OK
+)
+def set_view_status(req_id: int, expert_service: ExpertService = Depends()):
+    return expert_service.set_view_status(req_id)
 
 
 def change_request():

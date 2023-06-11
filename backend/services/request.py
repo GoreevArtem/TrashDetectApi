@@ -111,7 +111,6 @@ class RequestService:
             for region_operator in data:
                 region_operator.__dict__["expert"] = \
                     region_operator.__dict__["expert"].__dict__["name"]
-                region_operator.__dict__["expert"] = None
                 region_operator.__dict__["region_operator"] = \
                     region_operator.__dict__["region_operator"].__dict__["reg_oper_name"]
 

@@ -2,8 +2,8 @@ import functools
 
 from fastapi import Response, status, Depends, HTTPException
 from fastapi_jwt_auth import AuthJWT
-from sqlalchemy import or_
-from sqlalchemy.orm import Session
+from sqlalchemy import or_, and_
+from sqlalchemy.orm import Session, joinedload
 
 from database import models
 from database.db import get_session
@@ -112,3 +112,28 @@ class ExpertService(UserService):
 
             self.session.commit()
             self.session.refresh(user)
+
+    def get_all_requests(self, limit: int = 10):
+        all_requests = self.session.query(models.Request).order_by(models.Request.id). \
+            filter(models.Request.expert_id == self.user_id).limit(limit).all()
+        return dict(zip(range(1, len(all_requests) + 1), all_requests))
+
+    def get_request(self, req_id: int):
+        try:
+            data = self.session.query(models.Request). \
+                options(
+                joinedload(models.Request.address)) \
+                .filter(and_(models.Request.id == req_id, models.Request.expert_id == self.user_id)).first()
+            return data
+        except:
+            return None
+
+    def set_view_status(self, req_id: int):
+        try:
+            data = self.get_request(req_id)
+            data.status = 'view'
+            self.session.commit()
+            self.session.refresh(data)
+            return data
+        except:
+            return None
