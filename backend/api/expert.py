@@ -5,14 +5,14 @@ from services.expert import Expert, ExpertService
 
 router = APIRouter(
     prefix='/expert',
-    tags=['expert'],
 )
 
 
 @router.post(
     '/register',
     status_code=status.HTTP_201_CREATED,
-    response_model=schemas.ExpertSchema
+    response_model=schemas.ExpertSchema,
+    tags=['expert'],
 )
 async def create_user(
         payload: schemas.RegisterExpertSchema,
@@ -24,7 +24,8 @@ async def create_user(
 @router.post(
     '/authenticate',
     status_code=status.HTTP_200_OK,
-    response_model=schemas.TokenSchema
+    response_model=schemas.TokenSchema,
+    tags=['expert'],
 )
 async def authenticate_user(
         payload: schemas.ExpertSchema,
@@ -36,7 +37,11 @@ async def authenticate_user(
 ##
 # TODO UPDATE SCHEMAS
 ##
-@router.get('/me', status_code=status.HTTP_200_OK)
+@router.get(
+    '/me',
+    status_code=status.HTTP_200_OK,
+    tags=['expert'],
+)
 def get_me(
         expert_service: ExpertService = Depends()
 ):
@@ -45,7 +50,8 @@ def get_me(
 
 @router.patch(
     '/me_update',
-    status_code=status.HTTP_204_NO_CONTENT
+    status_code=status.HTTP_204_NO_CONTENT,
+    tags=['expert'],
 )
 def update_me(
         payload: schemas.UpdateExpertSchema,
@@ -56,7 +62,8 @@ def update_me(
 
 @router.get(
     '/get_all_requests',
-    status_code=status.HTTP_200_OK
+    status_code=status.HTTP_200_OK,
+    tags=['expert requests'],
 )
 def get_requests(limit: int = 10, expert_service: ExpertService = Depends()):
     return expert_service.get_all_requests(limit)
@@ -64,7 +71,8 @@ def get_requests(limit: int = 10, expert_service: ExpertService = Depends()):
 
 @router.get(
     '/get_request',
-    status_code=status.HTTP_200_OK
+    status_code=status.HTTP_200_OK,
+    tags=['expert requests'],
 )
 def get_request(req_id: int, expert_service: ExpertService = Depends()):
     return expert_service.get_request(req_id)
@@ -72,7 +80,8 @@ def get_request(req_id: int, expert_service: ExpertService = Depends()):
 
 @router.put(
     '/set_view_status',
-    status_code=status.HTTP_200_OK
+    status_code=status.HTTP_200_OK,
+    tags=['expert requests'],
 )
 def set_view_status(req_id: int, expert_service: ExpertService = Depends()):
     return expert_service.set_view_status(req_id)

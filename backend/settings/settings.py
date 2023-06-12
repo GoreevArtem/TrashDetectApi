@@ -13,9 +13,6 @@ class Settings(BaseSettings):
     REDIS_HOST: str = "redis"
     REDIS_PORT: int = 6379
 
-    # JWT_PUBLIC_KEY: str
-    # JWT_PRIVATE_KEY: str
-
     REFRESH_TOKEN_EXPIRES_IN: int
     ACCESS_TOKEN_EXPIRES_IN: int
     JWT_ALGORITHM: str = "HS256"

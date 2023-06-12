@@ -79,7 +79,14 @@ class ExpertService(UserService):
     def get_me(
             self
     ):
-        return self.session.query(models.Expert).get(self.user_id)
+        expert = self.session.query(models.Expert).get(self.user_id)
+        if expert is not None:
+            return expert
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail='Not authenticated'
+            )
 
     def update_me(
             self,
@@ -98,26 +105,22 @@ class ExpertService(UserService):
             self.session.refresh(user)
 
     def get_all_requests(self, limit: int = 10):
+        user = self.get_me()
         all_requests = self.session.query(models.Request).order_by(models.Request.id). \
-            filter(models.Request.expert_id == self.user_id).limit(limit).all()
+            filter(models.Request.expert_id == user.id).limit(limit).all()
         return dict(zip(range(1, len(all_requests) + 1), all_requests))
 
     def get_request(self, req_id: int):
-        try:
-            data = self.session.query(models.Request). \
-                options(
-                joinedload(models.Request.address)) \
-                .filter(and_(models.Request.id == req_id, models.Request.expert_id == self.user_id)).first()
-            return data
-        except:
-            return None
+        user = self.get_me()
+        data = self.session.query(models.Request). \
+            options(
+            joinedload(models.Request.address)) \
+            .filter(and_(models.Request.id == req_id, models.Request.expert_id == user.id)).first()
+        return data
 
     def set_view_status(self, req_id: int):
-        try:
-            data = self.get_request(req_id)
-            data.status = 'view'
-            self.session.commit()
-            self.session.refresh(data)
-            return data
-        except:
-            return None
+        data = self.get_request(req_id)
+        data.status = 'view'
+        self.session.commit()
+        self.session.refresh(data)
+        return data

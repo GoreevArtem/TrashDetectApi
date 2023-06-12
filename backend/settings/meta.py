@@ -19,4 +19,8 @@ tags_metadata = [
         'name': 'expert',
         'description': 'Операции эксперта',
     },
+    {
+        'name': 'expert requests',
+        'description': 'Заявки эксперта',
+    },
 ]

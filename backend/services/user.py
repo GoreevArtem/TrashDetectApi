@@ -24,7 +24,15 @@ class UserService:
     def __get_user_by_id(
             self
     ):
-        return self.session.query(models.User).get(self.user_id)
+
+        user = self.session.query(models.User).get(self.user_id)
+        if user is not None:
+            return user
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail='Not authenticated'
+            )
 
     def get_me(
             self
