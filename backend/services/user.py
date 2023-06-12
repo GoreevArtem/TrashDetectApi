@@ -1,26 +1,25 @@
 from datetime import datetime
 
 from fastapi import HTTPException
-from fastapi import Response, status, Depends
-from fastapi_jwt_auth import AuthJWT
+from fastapi import status, Depends
 
 from database import models
 from database.db import Session, get_session
 from schemas import schemas
-from utils import oauth2, utils
+from utils import utils
+from utils.JWT import JWTBearer
 
 
 class UserService:
 
     def __init__(
             self,
-            user_id: int = Depends(oauth2.require_user),
+            token=Depends(JWTBearer()),
             session: Session = Depends(get_session),
-            Authorize: AuthJWT = Depends()
     ):
-        self.user_id = user_id
+        self.token = token
+        self.user_id = JWTBearer.decodeJWT(token).get("user_id")
         self.session = session
-        self.Authorize = Authorize
 
     def __get_user_by_id(
             self
@@ -41,7 +40,6 @@ class UserService:
 
     def update_me(
             self,
-            response: Response,
             payload: schemas.UpdateUserSchema
     ):
         user = self.__get_user_by_id()
@@ -74,9 +72,6 @@ class UserService:
             user.email = payload.email
 
         user.updated_at = datetime.now()
-
-        self.Authorize.unset_jwt_cookies()
-        response.set_cookie('logged_in', '', -1)
 
         self.session.commit()
         self.session.refresh(user)

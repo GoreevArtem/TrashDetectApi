@@ -1,6 +1,6 @@
 import functools
 import os.path
-from typing import List, Optional, Dict
+from typing import Optional, Dict
 
 import aiofiles as aiofiles
 from fastapi import Depends, HTTPException, status, UploadFile, File
@@ -11,18 +11,19 @@ import utils.create_sourse
 from database import models
 from database.db import Session, get_session
 from schemas import schemas
-from utils import oauth2
+from utils.JWT import JWTBearer
 from utils.get_address import get_addr
 
 
 class RequestService:
     def __init__(
             self,
+            token=Depends(JWTBearer()),
             session: Session = Depends(get_session),
-            user_id: int = Depends(oauth2.require_user)
     ):
+        self.token = token
+        self.user_id = JWTBearer.decodeJWT(token).get("user_id")
         self.session = session
-        self.user_id = user_id
 
     def create_new_request(
             self,
@@ -133,5 +134,8 @@ class RequestService:
         }
 
     def download_photo(self, upload_name):
-        os.chdir(os.path.join("..", "source_users_photo"))
-        return os.path.join("..", "source_users_photo", str(self.user_id), upload_name)
+        try:
+            os.chdir(os.path.join("..", "source_users_photo"))
+            return os.path.join("..", "source_users_photo", str(self.user_id), upload_name)
+        except:
+            return None

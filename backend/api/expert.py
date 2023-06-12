@@ -18,7 +18,7 @@ async def create_user(
         payload: schemas.RegisterExpertSchema,
         auth_service: Expert = Depends()
 ):
-    return auth_service.register_new_user(payload)
+    return auth_service.register_new_expert(payload)
 
 
 @router.post(
@@ -28,18 +28,9 @@ async def create_user(
 )
 async def authenticate_user(
         payload: schemas.ExpertSchema,
-        response: Response,
         auth_service: Expert = Depends(),
 ):
-    return auth_service.authenticate_user(payload, response)
-
-
-@router.get(
-    '/logout',
-    status_code=status.HTTP_204_NO_CONTENT
-)
-def logout(response: Response, auth_service: Expert = Depends()):
-    return auth_service.logout(response)
+    return auth_service.authenticate_expert(payload)
 
 
 ##
@@ -58,10 +49,9 @@ def get_me(
 )
 def update_me(
         payload: schemas.UpdateExpertSchema,
-        response: Response,
         expert_service: ExpertService = Depends()
 ):
-    return expert_service.update_me(response, payload)
+    return expert_service.update_me(payload)
 
 
 @router.get(

@@ -1,9 +1,10 @@
+from typing import Optional
+
 from fastapi import APIRouter, Response, status
 from fastapi import Depends
 
 from schemas import schemas
-from services.user import UserService
-from utils import oauth2
+from services.user import UserService, JWTBearer
 
 router = APIRouter(
     prefix='/user',
@@ -11,7 +12,8 @@ router = APIRouter(
 )
 
 
-@router.get('/me', status_code=status.HTTP_200_OK, response_model=schemas.UserResponseSchema)
+@router.get('/me', dependencies=[Depends(JWTBearer())], status_code=status.HTTP_200_OK,
+            response_model= Optional[schemas.UserResponseSchema])
 def get_me(
         user_service: UserService = Depends()
 ):
@@ -20,17 +22,20 @@ def get_me(
 
 @router.patch(
     '/me_update',
+    dependencies=[Depends(JWTBearer())],
     status_code=status.HTTP_204_NO_CONTENT
 )
 def update_me(
         payload: schemas.UpdateUserSchema,
-        response: Response,
         user_service: UserService = Depends()
 ):
-    return user_service.update_me(response, payload)
+    return user_service.update_me(payload)
 
 
-@router.delete('/me_delete', status_code=status.HTTP_204_NO_CONTENT)
+@router.delete(
+    '/me_delete',
+    dependencies=[Depends(JWTBearer())],
+    status_code=status.HTTP_204_NO_CONTENT)
 def delete_me(
         user_service: UserService = Depends()
 ):
