@@ -76,10 +76,11 @@ class ExpertService(UserService):
     def __init__(self, token=Depends(JWTBearer()), session: Session = Depends(get_session)):
         super().__init__(token, session)
 
-    def get_me(
+    def __get_me(
             self
     ):
-        expert = self.session.query(models.Expert).get(self.user_id)
+        expert = self.session.query(models.Expert).\
+            options(joinedload(models.Expert.region_operator)).get(self.user_id)
         if expert is not None:
             return expert
         else:
@@ -88,11 +89,18 @@ class ExpertService(UserService):
                 detail='Not authenticated'
             )
 
+    def get_me(
+            self
+    ):
+        expert = self.__get_me()
+        expert.__dict__["region_operator"] = expert.__dict__["region_operator"].__dict__["reg_oper_name"]
+        return expert
+
     def update_me(
             self,
             payload: schemas.UpdateExpertSchema
     ):
-        user = self.get_me()
+        user = self.__get_me()
         if payload.password is not None:
             if utils.verify_password(payload.password, user.password):
                 raise HTTPException(
@@ -105,22 +113,47 @@ class ExpertService(UserService):
             self.session.refresh(user)
 
     def get_all_requests(self, limit: int = 10):
-        user = self.get_me()
-        all_requests = self.session.query(models.Request).order_by(models.Request.id). \
-            filter(models.Request.expert_id == user.id).limit(limit).all()
-        return dict(zip(range(1, len(all_requests) + 1), all_requests))
+        user = self.__get_me()
+        try:
+            all_requests = self.session.query(models.Request).options(
+                joinedload(models.Request.address),
+                joinedload(models.Request.expert),
+                joinedload(models.Request.region_operator)
+            ).order_by(models.Request.id). \
+                filter(models.Request.expert_id == user.id).limit(limit).all()
+            for request in all_requests:
+                request.__dict__["expert"] = request.__dict__["expert"].__dict__["name"]
+                request.__dict__["region_operator"] = request.__dict__["region_operator"].__dict__["reg_oper_name"]
+            return dict(zip(range(1, len(all_requests) + 1), all_requests))
+        except:
+            return None
 
     def get_request(self, req_id: int):
-        user = self.get_me()
-        data = self.session.query(models.Request). \
-            options(
-            joinedload(models.Request.address)) \
-            .filter(and_(models.Request.id == req_id, models.Request.expert_id == user.id)).first()
-        return data
+        try:
+            user = self.__get_me()
+            request = self.session.query(models.Request).options(
+                joinedload(models.Request.address),
+                joinedload(models.Request.expert),
+                joinedload(models.Request.region_operator)
+            ).filter(and_(models.Request.id == req_id, models.Request.expert_id == user.id)).first()
+            request.__dict__["expert"] = request.__dict__["expert"].__dict__["name"]
+            request.__dict__["region_operator"] = request.__dict__["region_operator"].__dict__["reg_oper_name"]
+            return request
+        except:
+            return None
 
     def set_view_status(self, req_id: int):
-        data = self.get_request(req_id)
-        data.status = 'view'
-        self.session.commit()
-        self.session.refresh(data)
-        return data
+        user = self.__get_me()
+        data = self.session.query(models.Request).filter(and_(models.Request.id == req_id,
+                                                              models.Request.expert_id == user.id)).first()
+        if data is not None:
+            if data.status != 'view':
+                data.status = 'view'
+                self.session.commit()
+                self.session.refresh(data)
+            return data
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail='Not found'
+            )

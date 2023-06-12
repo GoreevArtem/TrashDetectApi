@@ -40,7 +40,7 @@ class AuthService:
     def _not_user(user):
         if not user:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                                detail='Incorrect Email or Password')
+                                detail='Incorrect your data')
 
     @staticmethod
     def _user_verified(user):
@@ -52,7 +52,7 @@ class AuthService:
     def _verify_password(payload, user):
         if not utils.verify_password(payload.password, user.password):
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                                detail='Incorrect Email or Password')
+                                detail='Incorrect your data')
 
     @staticmethod
     def _create_token(user):

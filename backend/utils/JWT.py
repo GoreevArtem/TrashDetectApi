@@ -29,7 +29,7 @@ class JWTBearer(HTTPBearer):
             "user_id": str(user.id),
 
             "expires": time.mktime((datetime.datetime.now() +
-                                    datetime.timedelta(minutes=settings.ACCESS_TOKEN_EXPIRES_IN)).timetuple())
+                                    datetime.timedelta(days=settings.ACCESS_TOKEN_EXPIRES_IN)).timetuple())
         }
         access_token = jwt.encode(payload, settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM)
         return access_token

@@ -1,3 +1,5 @@
+from typing import Dict, Optional
+
 from fastapi import APIRouter, status, Response, Depends
 
 from schemas import schemas
@@ -40,6 +42,7 @@ async def authenticate_user(
 @router.get(
     '/me',
     status_code=status.HTTP_200_OK,
+    response_model=schemas.ExpertData,
     tags=['expert'],
 )
 def get_me(
@@ -63,6 +66,7 @@ def update_me(
 @router.get(
     '/get_all_requests',
     status_code=status.HTTP_200_OK,
+    response_model=Optional[Dict[str, schemas.RequestExpert]],
     tags=['expert requests'],
 )
 def get_requests(limit: int = 10, expert_service: ExpertService = Depends()):
@@ -72,6 +76,7 @@ def get_requests(limit: int = 10, expert_service: ExpertService = Depends()):
 @router.get(
     '/get_request',
     status_code=status.HTTP_200_OK,
+    response_model=Optional[schemas.RequestExpert],
     tags=['expert requests'],
 )
 def get_request(req_id: int, expert_service: ExpertService = Depends()):
@@ -81,6 +86,7 @@ def get_request(req_id: int, expert_service: ExpertService = Depends()):
 @router.put(
     '/set_view_status',
     status_code=status.HTTP_200_OK,
+    response_model=Optional[schemas.RequestExpertBase],
     tags=['expert requests'],
 )
 def set_view_status(req_id: int, expert_service: ExpertService = Depends()):

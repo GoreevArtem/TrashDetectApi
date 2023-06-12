@@ -11,7 +11,7 @@ class OrmMode(BaseModel):
 
 
 class UserBaseSchema(OrmMode):
-    name: Optional[str] = None
+    name: Optional[str]
     email: EmailStr
     password: str
 
@@ -29,7 +29,9 @@ class UpdateUserSchema(UserBaseSchema):
     password: Optional[str]
 
 
-class UserResponseSchema(UserBaseSchema):
+class UserResponseSchema(OrmMode):
+    name: Optional[str]
+    email: EmailStr
     created_at: datetime
     updated_at: datetime
 
@@ -90,3 +92,23 @@ class RegisterExpertSchema(ExpertSchema):
 
 class UpdateExpertSchema(OrmMode):
     password: str
+
+
+class ExpertData(OrmMode):
+    login: str
+    name: str
+    region_operator: str
+    count_active_requests: int
+
+
+class RequestExpertBase(OrmMode):
+    id: int
+    status: Optional[OperationKind]
+
+
+class RequestExpert(RequestExpertBase):
+    region_operator: str
+    expert: str
+    request_date: datetime
+    photo_names: str
+    address: Address
