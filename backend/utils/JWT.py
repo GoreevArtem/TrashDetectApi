@@ -1,3 +1,4 @@
+import datetime
 import time
 
 from fastapi import Request, HTTPException
@@ -26,7 +27,9 @@ class JWTBearer(HTTPBearer):
     def signJWT(user):
         payload = {
             "user_id": str(user.id),
-            "expires": time.time() + settings.ACCESS_TOKEN_EXPIRES_IN * 60
+
+            "expires": time.mktime((datetime.datetime.now() +
+                                    datetime.timedelta(minutes=settings.ACCESS_TOKEN_EXPIRES_IN)).timetuple())
         }
         access_token = jwt.encode(payload, settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM)
         return access_token
