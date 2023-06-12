@@ -1,6 +1,6 @@
 from typing import Optional, Dict, List
 
-from fastapi import APIRouter, status, Depends, UploadFile
+from fastapi import APIRouter, status, Depends, UploadFile, Query
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import FileResponse
 from redis.commands.json.path import Path
@@ -33,7 +33,7 @@ async def create_request(
     response_model=Optional[Dict[str, schemas.Request]]
 )
 async def get_request(
-        limit: int = 10,
+        limit: int = Query(default=10, ge=0),
         request_service: RequestService = Depends()
 ):
     key = str(request_service.user_id) + "_get_request_" + str(limit)

@@ -1,7 +1,10 @@
 from typing import Dict, Optional
 
-from fastapi import APIRouter, status, Response, Depends
+from fastapi import APIRouter, status, Depends, HTTPException, Query
+from fastapi.encoders import jsonable_encoder
+from redis.commands.json.path import Path
 
+from database.redis import redis_startup
 from schemas import schemas
 from services.expert import Expert, ExpertService
 
@@ -69,8 +72,13 @@ def update_me(
     response_model=Optional[Dict[str, schemas.RequestExpert]],
     tags=['expert requests'],
 )
-def get_requests(limit: int = 10, expert_service: ExpertService = Depends()):
-    return expert_service.get_all_requests(limit)
+def get_requests(limit: int = Query(default=10, ge=0), expert_service: ExpertService = Depends()):
+    key = str(expert_service.user_id) + "_get_requests_expert_" + str(limit)
+    if redis_startup.json().get(key) is None:
+        data = expert_service.get_all_requests(limit)
+        redis_startup.json().set(key, Path.root_path(), jsonable_encoder(data))
+        redis_startup.expire(key, 30)
+    return redis_startup.json().get(key)
 
 
 @router.get(
@@ -79,8 +87,19 @@ def get_requests(limit: int = 10, expert_service: ExpertService = Depends()):
     response_model=Optional[schemas.RequestExpert],
     tags=['expert requests'],
 )
-def get_request(req_id: int, expert_service: ExpertService = Depends()):
-    return expert_service.get_request(req_id)
+def get_request(req_id: int = Query(ge=0), expert_service: ExpertService = Depends()):
+    key = str(expert_service.user_id) + "_get_request_expert_" + str(req_id)
+    if redis_startup.json().get(key) is None:
+        data = expert_service.get_request(req_id)
+        if data is not None:
+            redis_startup.json().set(key, Path.root_path(), jsonable_encoder(data))
+            redis_startup.expire(key, 30)
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail='Not found'
+            )
+    return redis_startup.json().get(key)
 
 
 @router.put(
@@ -89,7 +108,7 @@ def get_request(req_id: int, expert_service: ExpertService = Depends()):
     response_model=Optional[schemas.RequestExpertBase],
     tags=['expert requests'],
 )
-def set_view_status(req_id: int, expert_service: ExpertService = Depends()):
+def set_view_status(req_id: int = Query(ge=0), expert_service: ExpertService = Depends()):
     return expert_service.set_view_status(req_id)
 
 
