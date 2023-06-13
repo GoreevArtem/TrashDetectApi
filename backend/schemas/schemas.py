@@ -34,6 +34,7 @@ class UserResponseSchema(OrmMode):
     email: EmailStr
     created_at: datetime
     updated_at: datetime
+    amount_garbage: Optional[int]
 
 
 class TokenSchema(BaseModel):

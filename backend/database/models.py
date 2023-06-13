@@ -22,6 +22,8 @@ class User(Base):
     updated_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text("now()"))
 
+    amount_garbage = Column(Integer, default=0, nullable=False)
+
     requests = relationship(
         'Request',
         back_populates="user",

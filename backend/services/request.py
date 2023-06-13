@@ -4,6 +4,7 @@ from typing import Optional, Dict
 
 import aiofiles as aiofiles
 from fastapi import Depends, HTTPException, status, UploadFile, File
+from fastapi.responses import FileResponse
 from sqlalchemy import func
 from sqlalchemy.orm import joinedload
 
@@ -120,6 +121,9 @@ class RequestService:
             return None
 
     async def detect_trash_on_photo(self, file: UploadFile = File(...)) -> Dict:
+        # if file.content_type not in ["image/jpeg", "image/png", "image/bmp", "image/bmp"]:
+        if file.content_type.split("/")[0] != "image":
+            raise HTTPException(status_code=400, detail="Invalid file type")
         file.filename = utils.create_sourse.rename_photo(self.user_id, file.filename)
         os.chdir(os.path.join("..", "source_users_photo"))
         utils.create_sourse.create_dir(str(self.user_id))
@@ -133,9 +137,10 @@ class RequestService:
             "trash_classes": "1, 2, 3"
         }
 
-    def download_photo(self, upload_name):
+    def download_photo(self, upload_name: str):
         try:
             os.chdir(os.path.join("..", "source_users_photo"))
-            return os.path.join("..", "source_users_photo", str(self.user_id), upload_name)
+            return FileResponse(path=os.path.join("..", "source_users_photo", str(self.user_id), upload_name),
+                                filename=utils.create_sourse.rename_photo(upload_name))
         except:
             return None
