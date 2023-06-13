@@ -138,9 +138,9 @@ class RequestService:
         }
 
     def download_photo(self, upload_name: str):
-        try:
-            os.chdir(os.path.join("..", "source_users_photo"))
-            return FileResponse(path=os.path.join("..", "source_users_photo", str(self.user_id), upload_name),
-                                filename=utils.create_sourse.rename_photo(upload_name))
-        except:
-            return None
+        os.chdir(os.path.join("..", "source_users_photo"))
+        path = os.path.join("..", "source_users_photo", str(self.user_id), upload_name)
+        if os.path.exists(path):
+            return path
+        else:
+            raise HTTPException(status_code=404, detail="Photo not found")

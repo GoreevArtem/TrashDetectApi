@@ -132,3 +132,5 @@ dmypy.json
 
 *.sql
 *.html
+
+/source_users_photo/

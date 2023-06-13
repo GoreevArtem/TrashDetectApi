@@ -3,7 +3,7 @@ import datetime
 
 
 def create_dir(path: str) -> None:
-    if not (os.path.isdir(path)):
+    if not os.path.exists(path):
         os.mkdir(path)
 
 
