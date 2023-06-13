@@ -2,7 +2,7 @@ import uuid
 
 from sqlalchemy import Column, Integer, String, TIMESTAMP, text, Boolean, ARRAY, ForeignKey, Table, UniqueConstraint
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 
 from .db import Base
 
@@ -22,7 +22,14 @@ class User(Base):
     updated_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text("now()"))
 
-    requests = relationship('Request', back_populates="user")
+    amount_garbage = Column(Integer, default=0, nullable=False)
+
+    requests = relationship(
+        'Request',
+        back_populates="user",
+        cascade='save-update, merge, delete',
+        passive_deletes=True,
+    )
 
 
 class Request(Base):
@@ -35,28 +42,85 @@ class Request(Base):
     photo_names = Column(String)
     status = Column(String, default="not view")
 
-    user_id = Column(UUID(as_uuid=True), ForeignKey("user.id"))
-    user = relationship("User", back_populates="requests")
+    user_id = Column(UUID(as_uuid=True), ForeignKey("user.id", ondelete='SET NULL'), nullable=True)
+    user = relationship(
+        "User",
+        back_populates="requests",
+    )
 
-    region_operator_id = Column(Integer, ForeignKey("region_operator.id"))
-    region_operator = relationship("RegionOperator", back_populates="requests")
+    region_operator_id = Column(Integer, ForeignKey("region_operator.id", ondelete='CASCADE'))
+    region_operator = relationship(
+        "RegionOperator",
+        back_populates="requests",
+        cascade='save-update, merge, delete',
+        passive_deletes=True,
+    )
 
-    address_id = Column(Integer, ForeignKey("address.id"))
-    address = relationship("Address", back_populates="addresses")
+    address_id = Column(Integer, ForeignKey("address.id", ondelete='CASCADE'))
+    address = relationship(
+        "Address",
+        back_populates="addresses",
+        cascade='save-update, merge, delete',
+        passive_deletes=True,
+    )
 
-    garbage_classes = relationship("GarbageClass", back_populates="request")
+    garbage_classes = relationship(
+        "GarbageClass",
+        back_populates="request",
+        cascade='save-update, merge, delete',
+        passive_deletes=True,
+    )
+    expert_id = Column(UUID(as_uuid=True), ForeignKey("expert.id", ondelete='CASCADE'))
+    expert = relationship(
+        "Expert",
+        back_populates="requests",
+        cascade='save-update, merge, delete',
+        passive_deletes=True,
+    )
 
 
 class RegionOperator(Base):
     __tablename__ = 'region_operator'
 
     id = Column(Integer, primary_key=True, index=True)
-    reg_oper_name = Column(String, nullable=False)
+    reg_oper_name = Column(String, nullable=False, unique=True)
     reg_oper_number_zone = Column(Integer, nullable=False)
     reg_oper_meaning = Column(String, nullable=False)
 
-    requests = relationship("Request", back_populates="region_operator")
-    experts = relationship("Expert", back_populates="region_operator")
+    zone_region = relationship(
+        'ZoneRegion',
+        back_populates="region",
+        cascade='save-update, merge, delete',
+        passive_deletes=True,
+    )
+
+    requests = relationship(
+        "Request",
+        back_populates="region_operator",
+        cascade='save-update, merge, delete',
+        passive_deletes=True,
+    )
+    experts = relationship(
+        "Expert",
+        back_populates="region_operator",
+        cascade='save-update, merge, delete',
+        passive_deletes=True,
+    )
+
+
+class ZoneRegion(Base):
+    __tablename__ = 'zone_region'
+    id = Column(Integer, primary_key=True, index=True)
+    zone_address_region = Column(String)
+    zone_address_city = Column(String)
+    zone_address_city_district = Column(String)
+    region_operator = Column(Integer, ForeignKey("region_operator.id", ondelete='CASCADE'))
+    region = relationship(
+        'RegionOperator',
+        back_populates="zone_region",
+        cascade='save-update, merge, delete',
+        passive_deletes=True,
+    )
 
 
 class Expert(Base):
@@ -67,9 +131,22 @@ class Expert(Base):
     login = Column(String, unique=True, nullable=False)
     password = Column(String, nullable=False)
     verified = Column(Boolean, nullable=False, server_default="True")
+    count_active_requests = Column(Integer, default=0)
 
-    region_operator_id = Column(Integer, ForeignKey("region_operator.id"))
-    region_operator = relationship("RegionOperator", back_populates="experts")
+    region_operator_id = Column(Integer, ForeignKey("region_operator.id", ondelete='CASCADE'))
+    region_operator = relationship(
+        "RegionOperator",
+        back_populates="experts",
+        cascade = 'save-update, merge, delete',
+        passive_deletes = True,
+    )
+
+    requests = relationship(
+        'Request',
+        back_populates="expert",
+        cascade = 'save-update, merge, delete',
+        passive_deletes = True,
+    )
 
 
 class Address(Base):
@@ -80,12 +157,13 @@ class Address(Base):
     address_city = Column(String)
     address_city_district = Column(String)
     address_street = Column(String)
-    address_house_number = Column(String)
+    address_house_number = Column(String, unique=True)
 
-    addresses = relationship('Request', back_populates="address")
-
-    __table_args__ = (
-        UniqueConstraint('address_house_number'),
+    addresses = relationship(
+        'Request',
+        back_populates="address",
+        cascade = 'save-update, merge, delete',
+        passive_deletes = True,
     )
 
 
@@ -97,10 +175,3 @@ class GarbageClass(Base):
 
     request_id = Column(Integer, ForeignKey("request.id"))
     request = relationship("Request", back_populates="garbage_classes")
-
-
-class RegionOperatorAddress(Base):
-    __tablename__ = "region_operator_address"
-    id = Column(Integer, primary_key=True, index=True)
-    address = Column("address_id", Integer, ForeignKey("address.id")),
-    region_operator = Column("region_operator_id", Integer, ForeignKey("region_operator.id"))

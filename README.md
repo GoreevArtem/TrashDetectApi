@@ -31,3 +31,8 @@ make up
 ```
 make down
 ```
+Остановить его
+
+```
+make stop
+```

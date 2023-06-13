@@ -2,6 +2,7 @@ from fastapi import APIRouter, Response, status, Depends
 
 from schemas import schemas
 from services.auth import AuthService
+from services.user import JWTBearer
 
 router = APIRouter(
     prefix='/auth',
@@ -22,28 +23,12 @@ async def create_user(
 
 
 @router.post(
-    '/authenticate_user',
+    '/authenticate',
     status_code=status.HTTP_200_OK,
     response_model=schemas.TokenSchema
 )
 async def authenticate_user(
         payload: schemas.LoginUserSchema,
-        response: Response,
         auth_service: AuthService = Depends(),
 ):
-    return auth_service.authenticate_user(payload, response)
-
-
-@router.get(
-    '/refresh'
-)
-def refresh_token(response: Response, auth_service: AuthService = Depends()):
-    return auth_service.refresh_token(response)
-
-
-@router.get(
-    '/logout',
-    status_code=status.HTTP_204_NO_CONTENT
-)
-def logout(response: Response, auth_service: AuthService = Depends()):
-    return auth_service.logout(response)
+    return auth_service.authenticate_user(payload)
