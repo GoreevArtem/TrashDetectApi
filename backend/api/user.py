@@ -19,9 +19,8 @@ def get_me(
 ):
     return user_service.get_me()
 
-
 @router.patch(
-    '/me_update',
+    '/update_email',
     dependencies=[Depends(JWTBearer())],
     status_code=status.HTTP_204_NO_CONTENT
 )
@@ -29,7 +28,19 @@ def update_me(
         payload: schemas.UpdateUserSchema,
         user_service: UserService = Depends()
 ):
-    return user_service.update_me(payload)
+    return user_service.update_email(payload)
+
+
+@router.patch(
+    '/update_password',
+    dependencies=[Depends(JWTBearer())],
+    status_code=status.HTTP_204_NO_CONTENT
+)
+def update_me(
+        payload: schemas.UpdateUserSchema,
+        user_service: UserService = Depends()
+):
+    return user_service.update_password(payload)
 
 
 @router.delete(

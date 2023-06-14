@@ -7,7 +7,7 @@ from database.db import engine, Base
 from settings.meta import title, description, version, tags_metadata
 
 app = FastAPI(
-
+    title=title,
     description=description,
     version=version,
     openapi_tags=tags_metadata

@@ -24,8 +24,11 @@ class LoginUserSchema(UserBaseSchema):
     password: str
 
 
-class UpdateUserSchema(UserBaseSchema):
-    email: Optional[EmailStr]
+class UpdateUserEmailSchema(OrmMode):
+    email: EmailStr
+
+
+class UpdateUserPasswordSchema(OrmMode):
     password: Optional[str]
 
 
