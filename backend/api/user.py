@@ -13,19 +13,20 @@ router = APIRouter(
 
 
 @router.get('/me', dependencies=[Depends(JWTBearer())], status_code=status.HTTP_200_OK,
-            response_model= Optional[schemas.UserResponseSchema])
+            response_model=Optional[schemas.UserResponseSchema])
 def get_me(
         user_service: UserService = Depends()
 ):
     return user_service.get_me()
+
 
 @router.patch(
     '/update_email',
     dependencies=[Depends(JWTBearer())],
     status_code=status.HTTP_204_NO_CONTENT
 )
-def update_me(
-        payload: schemas.UpdateUserSchema,
+def update_email(
+        payload: schemas.UpdateUserEmailSchema,
         user_service: UserService = Depends()
 ):
     return user_service.update_email(payload)
@@ -36,8 +37,8 @@ def update_me(
     dependencies=[Depends(JWTBearer())],
     status_code=status.HTTP_204_NO_CONTENT
 )
-def update_me(
-        payload: schemas.UpdateUserSchema,
+def update_password(
+        payload: schemas.UpdateUserPasswordSchema,
         user_service: UserService = Depends()
 ):
     return user_service.update_password(payload)
