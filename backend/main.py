@@ -1,3 +1,5 @@
+import os
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -32,4 +34,4 @@ app.add_middleware(
 
 @app.on_event("startup")
 async def app_startup():
-    utils.create_sourse.create_dir(path="../source_users_photo")
+    utils.create_sourse.create_dir(path=os.path.join("..", "source_users_photo"))

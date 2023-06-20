@@ -8,6 +8,7 @@ from redis.commands.json.path import Path
 from database.redis import redis_startup
 from schemas import schemas
 from services.request import RequestService
+from utils.JWT import JWTBearer
 
 router = APIRouter(
     prefix='/request',
@@ -18,7 +19,8 @@ router = APIRouter(
 @router.post(
     '/create_request',
     status_code=status.HTTP_201_CREATED,
-    response_model=schemas.CreateRequest
+    response_model=schemas.CreateRequest,
+    dependencies=[Depends(JWTBearer())]
 )
 async def create_request(
         new_request: schemas.CreateRequest,
@@ -30,7 +32,8 @@ async def create_request(
 @router.get(
     '/get_request',
     status_code=status.HTTP_200_OK,
-    response_model=Optional[Dict[str, schemas.Request]]
+    response_model=Optional[Dict[str, schemas.Request]],
+    dependencies=[Depends(JWTBearer())]
 )
 async def get_request(
         limit: int = Query(default=10, ge=0),
@@ -47,7 +50,8 @@ async def get_request(
 @router.post(
     "/detection",
     status_code=status.HTTP_200_OK,
-    response_model=Optional[Dict[str, schemas.FindClassTrash]]
+    response_model=Optional[Dict[str, schemas.FindClassTrash]],
+    dependencies=[Depends(JWTBearer())],
 )
 async def detect_trash_on_photo(
         files: List[UploadFile],
@@ -56,7 +60,11 @@ async def detect_trash_on_photo(
     return dict(zip(range(1, len(data) + 1), data))
 
 
-@router.get("/filepath", response_class=FileResponse)
+@router.get(
+    "/filepath",
+    response_class=FileResponse,
+    dependencies=[Depends(JWTBearer())],
+)
 def download_photo(
         upload_name: str,
         request_service: RequestService = Depends()):
