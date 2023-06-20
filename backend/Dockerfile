@@ -17,5 +17,7 @@ RUN apt-get update && apt-get install -y htop libgl1-mesa-glx libglib2.0-0
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
+RUN pip install ultralytics
+
 # copy project
 COPY . .
