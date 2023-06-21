@@ -109,8 +109,14 @@ def get_request(req_id: int = Query(ge=0), expert_service: ExpertService = Depen
     tags=['expert requests'],
 )
 def set_view_status(req_id: int = Query(ge=0), expert_service: ExpertService = Depends()):
-    return expert_service.set_view_status(req_id)
+    return expert_service.set_status(req_id, "view")
 
 
-def change_request():
-    ...
+@router.put(
+    '/set_clean_status',
+    status_code=status.HTTP_200_OK,
+    response_model=Optional[schemas.RequestExpertBase],
+    tags=['expert requests'],
+)
+def set_clean_status(req_id: int = Query(ge=0), expert_service: ExpertService = Depends()):
+    return expert_service.set_status(req_id, "clean")
