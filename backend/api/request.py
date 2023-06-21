@@ -50,14 +50,17 @@ async def get_request(
 @router.post(
     "/detection",
     status_code=status.HTTP_200_OK,
-    response_model=Optional[Dict[str, schemas.FindClassTrash]],
+    # response_model=Optional[Dict[str, schemas.FindClassTrash]],
+    response_model=Optional[schemas.FindClassTrash],
     dependencies=[Depends(JWTBearer())],
 )
 async def detect_trash_on_photo(
-        files: List[UploadFile],
+        # files: List[UploadFile],
+        file: UploadFile,
         request_service: RequestService = Depends()):
-    data = [schemas.FindClassTrash(**await request_service.detect_trash_on_photo(file)) for file in files]
-    return dict(zip(range(1, len(data) + 1), data))
+    # data = [schemas.FindClassTrash(**await request_service.detect_trash_on_photo(file)) for file in files]
+    # return dict(zip(range(1, len(data) + 1), data))
+    return await request_service.detect_trash_on_photo(file)
 
 
 @router.get(
