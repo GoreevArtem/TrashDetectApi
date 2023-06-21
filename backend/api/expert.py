@@ -2,6 +2,7 @@ from typing import Dict, Optional
 
 from fastapi import APIRouter, status, Depends, HTTPException, Query
 from fastapi.encoders import jsonable_encoder
+from fastapi.responses import FileResponse
 from redis.commands.json.path import Path
 
 from database.redis import redis_startup
@@ -100,6 +101,15 @@ def get_request(req_id: int = Query(ge=0), expert_service: ExpertService = Depen
                 detail='Not found'
             )
     return redis_startup.json().get(key)
+
+
+@router.get(
+    '/get_photo',
+    response_class=FileResponse,
+    tags=['expert requests']
+)
+def download_photo(req_id: int = Query(ge=0), expert_service: ExpertService = Depends()):
+    return expert_service.get_photo(req_id)
 
 
 @router.put(

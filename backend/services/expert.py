@@ -1,4 +1,5 @@
 import functools
+import os
 
 from fastapi import status, Depends, HTTPException
 from sqlalchemy import or_, and_
@@ -79,7 +80,7 @@ class ExpertService(UserService):
     def __get_me(
             self
     ):
-        expert = self.session.query(models.Expert).\
+        expert = self.session.query(models.Expert). \
             options(joinedload(models.Expert.region_operator)).get(self.user_id)
         if expert is not None:
             return expert
@@ -141,6 +142,17 @@ class ExpertService(UserService):
             return request
         except:
             return None
+
+    def get_photo(self, req_id: int):
+        user = self.__get_me()
+        request = self.session.query(models.Request).filter(and_(models.Request.id == req_id,
+                                                                 models.Request.expert_id == user.id)).first()
+        os.chdir(os.path.join("..", "source_users_photo"))
+        path = os.path.join("..", "source_users_photo", str(request.user_id), str(request.photo_names))
+        if os.path.exists(path):
+            return path
+        else:
+            raise HTTPException(status_code=404, detail="Photo not found")
 
     def set_status(self, req_id: int, status: str):
         user = self.__get_me()

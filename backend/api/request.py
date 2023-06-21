@@ -1,4 +1,4 @@
-from typing import Optional, Dict, List
+from typing import Optional, Dict
 
 from fastapi import APIRouter, status, Depends, UploadFile, Query
 from fastapi.encoders import jsonable_encoder
