@@ -130,16 +130,22 @@ class RequestService:
         file_location = os.path.join("..", "source_users_photo", str(self.user_id), file.filename)
         async with aiofiles.open(file_location, 'wb') as f:
             await f.write(file.file.read())
-        find_garbage = GarbageDetection(os.path.join("..", "app", "best.pt")).garbage_detection(file_location, file_location)
-        if find_garbage[1] != 0:
-            user = self.session.query(models.User).get(self.user_id)
-            user.amount_garbage += find_garbage[1]
-            self.session.commit()
-            self.session.refresh(user)
-        return {
-            "name_photo": file.filename,
-            "trash_classes": find_garbage[0]
-        }
+        find_garbage = GarbageDetection(os.path.join("..", "app", "best.pt")).garbage_detection(file_location,
+                                                                                                file_location)
+        if find_garbage is not None:
+            if find_garbage[1] != 0:
+                user = self.session.query(models.User).get(self.user_id)
+                user.amount_garbage += find_garbage[1]
+                self.session.commit()
+                self.session.refresh(user)
+            return {
+                "name_photo": file.filename,
+                "trash_classes": find_garbage[0]
+            }
+        else:
+            if os.path.isfile(file_location):
+                os.remove(file_location)
+            raise HTTPException(status_code=404, detail="Trash not found")
 
     def download_photo(self, upload_name: str):
         os.chdir(os.path.join("..", "source_users_photo"))
