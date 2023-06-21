@@ -134,3 +134,4 @@ dmypy.json
 *.html
 
 /source_users_photo/
+/best.pt
