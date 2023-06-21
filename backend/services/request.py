@@ -100,7 +100,7 @@ class RequestService:
                 detail='Address entered incorrectly'
             )
 
-    def get_request(self, limit: int = 10) -> Optional[Dict[str, schemas.Request]]:
+    def get_requests(self, limit: int = 10) -> Optional[Dict[str, schemas.Request]]:
         try:
             data = self.session.query(models.Request) \
                 .options(

@@ -30,18 +30,18 @@ async def create_request(
 
 
 @router.get(
-    '/get_request',
+    '/get_requests',
     status_code=status.HTTP_200_OK,
     response_model=Optional[Dict[str, schemas.Request]],
     dependencies=[Depends(JWTBearer())]
 )
-async def get_request(
+async def get_requests(
         limit: int = Query(default=10, ge=0),
         request_service: RequestService = Depends()
 ):
     key = str(request_service.user_id) + "_get_request_" + str(limit)
     if redis_startup.json().get(key) is None:
-        data = request_service.get_request(limit)
+        data = request_service.get_requests(limit)
         redis_startup.json().set(key, Path.root_path(), jsonable_encoder(data))
         redis_startup.expire(key, 30)
     return redis_startup.json().get(key)
