@@ -68,7 +68,7 @@ def update_me(
 
 
 @router.get(
-    '/get_all_requests',
+    '/get_all_requests/{limit}',
     status_code=status.HTTP_200_OK,
     response_model=Optional[Dict[str, schemas.RequestExpert]],
     tags=['expert requests'],
@@ -83,7 +83,7 @@ def get_requests(limit: int = Query(default=10, ge=0), expert_service: ExpertSer
 
 
 @router.get(
-    '/get_request',
+    '/get_request/{req_id}',
     status_code=status.HTTP_200_OK,
     response_model=Optional[schemas.RequestExpert],
     tags=['expert requests'],
@@ -104,7 +104,7 @@ def get_request(req_id: int = Query(ge=0), expert_service: ExpertService = Depen
 
 
 @router.get(
-    '/get_photo',
+    '/get_photo/{req_id}',
     response_class=FileResponse,
     tags=['expert requests']
 )
@@ -113,7 +113,7 @@ def download_photo(req_id: int = Query(ge=0), expert_service: ExpertService = De
 
 
 @router.put(
-    '/set_view_status',
+    '/set_view_status/{req_id}',
     status_code=status.HTTP_200_OK,
     response_model=Optional[schemas.RequestExpertBase],
     tags=['expert requests'],
@@ -123,7 +123,7 @@ def set_view_status(req_id: int = Query(ge=0), expert_service: ExpertService = D
 
 
 @router.put(
-    '/set_clean_status',
+    '/set_clean_status/{req_id}',
     status_code=status.HTTP_200_OK,
     response_model=Optional[schemas.RequestExpertBase],
     tags=['expert requests'],

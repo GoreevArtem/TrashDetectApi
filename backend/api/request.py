@@ -30,12 +30,12 @@ async def create_request(
 
 
 @router.get(
-    '/get_request',
+    '/get_request/{req_id}',
     status_code=status.HTTP_200_OK,
     response_model=Optional[schemas.Request],
     dependencies=[Depends(JWTBearer())]
 )
-async def get_requests(
+async def get_request(
         req_id: int = Query(ge=0),
         request_service: RequestService = Depends()
 ):
@@ -48,7 +48,7 @@ async def get_requests(
 
 
 @router.get(
-    '/get_requests',
+    '/get_requests/{limit}',
     status_code=status.HTTP_200_OK,
     response_model=Optional[Dict[str, schemas.Request]],
     dependencies=[Depends(JWTBearer())]
@@ -78,7 +78,7 @@ async def detect_trash_on_photo(
 
 
 @router.get(
-    "/filepath",
+    "/filepath/{upload_name}",
     response_class=FileResponse,
     dependencies=[Depends(JWTBearer())],
 )
