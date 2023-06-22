@@ -1,6 +1,6 @@
 from typing import Optional, Dict
 
-from fastapi import APIRouter, status, Depends, UploadFile, Query
+from fastapi import APIRouter, status, Depends, UploadFile, Query, BackgroundTasks, HTTPException
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import FileResponse
 from redis.commands.json.path import Path
@@ -19,14 +19,16 @@ router = APIRouter(
 @router.post(
     '/create_request',
     status_code=status.HTTP_201_CREATED,
-    response_model=schemas.CreateRequest,
+    response_model=schemas.MessageSent,
     dependencies=[Depends(JWTBearer())]
 )
 async def create_request(
         new_request: schemas.CreateRequest,
+        background_tasks: BackgroundTasks,
         request_service: RequestService = Depends()
 ):
-    return request_service.create_new_request(new_request)
+    background_tasks.add_task(request_service.create_new_request, new_request)
+    return {"message": "Message sent"}
 
 
 @router.get(
@@ -36,9 +38,11 @@ async def create_request(
     dependencies=[Depends(JWTBearer())]
 )
 async def get_request(
-        req_id: int = Query(ge=0),
+        req_id: int,
         request_service: RequestService = Depends()
 ):
+    if req_id < 0:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='negative parameter')
     key = str(request_service.user_id) + "_get_request_" + str(req_id)
     if redis_startup.json().get(key) is None:
         data = request_service.get_request(req_id)
@@ -54,9 +58,11 @@ async def get_request(
     dependencies=[Depends(JWTBearer())]
 )
 async def get_requests(
-        limit: int = Query(default=10, ge=0),
+        limit: int,
         request_service: RequestService = Depends()
 ):
+    if limit < 0:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='negative parameter')
     key = str(request_service.user_id) + "_get_all_requests_" + str(limit)
     if redis_startup.json().get(key) is None:
         data = request_service.get_all_requests(limit)

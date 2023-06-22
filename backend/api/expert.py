@@ -1,6 +1,6 @@
 from typing import Dict, Optional
 
-from fastapi import APIRouter, status, Depends, HTTPException, Query
+from fastapi import APIRouter, status, Depends, HTTPException, BackgroundTasks
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import FileResponse
 from redis.commands.json.path import Path
@@ -73,12 +73,14 @@ def update_me(
     response_model=Optional[Dict[str, schemas.RequestExpert]],
     tags=['expert requests'],
 )
-def get_requests(limit: int = Query(default=10, ge=0), expert_service: ExpertService = Depends()):
+def get_requests(limit: int, expert_service: ExpertService = Depends()):
+    if limit < 0:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='negative parameter')
     key = str(expert_service.user_id) + "_get_requests_expert_" + str(limit)
     if redis_startup.json().get(key) is None:
         data = expert_service.get_all_requests(limit)
         redis_startup.json().set(key, Path.root_path(), jsonable_encoder(data))
-        redis_startup.expire(key, 30)
+        redis_startup.expire(key, 15)
     return redis_startup.json().get(key)
 
 
@@ -88,13 +90,15 @@ def get_requests(limit: int = Query(default=10, ge=0), expert_service: ExpertSer
     response_model=Optional[schemas.RequestExpert],
     tags=['expert requests'],
 )
-def get_request(req_id: int = Query(ge=0), expert_service: ExpertService = Depends()):
+def get_request(req_id: int, expert_service: ExpertService = Depends()):
+    if req_id < 0:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='negative parameter')
     key = str(expert_service.user_id) + "_get_request_expert_" + str(req_id)
     if redis_startup.json().get(key) is None:
         data = expert_service.get_request(req_id)
         if data is not None:
             redis_startup.json().set(key, Path.root_path(), jsonable_encoder(data))
-            redis_startup.expire(key, 30)
+            redis_startup.expire(key, 15)
         else:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
@@ -108,25 +112,41 @@ def get_request(req_id: int = Query(ge=0), expert_service: ExpertService = Depen
     response_class=FileResponse,
     tags=['expert requests']
 )
-def download_photo(req_id: int = Query(ge=0), expert_service: ExpertService = Depends()):
+def download_photo(req_id: int, expert_service: ExpertService = Depends()):
+    if req_id < 0:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='negative parameter')
     return expert_service.get_photo(req_id)
 
 
 @router.put(
     '/set_view_status/{req_id}',
     status_code=status.HTTP_200_OK,
-    response_model=Optional[schemas.RequestExpertBase],
+    response_model=schemas.MessageSent,
     tags=['expert requests'],
 )
-def set_view_status(req_id: int = Query(ge=0), expert_service: ExpertService = Depends()):
-    return expert_service.set_status(req_id, "view")
+def set_view_status(
+        req_id: int,
+        background_tasks: BackgroundTasks,
+        expert_service: ExpertService = Depends()
+):
+    if req_id < 0:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='negative parameter')
+    background_tasks.add_task(expert_service.set_status, req_id, "view")
+    return {"message": "status changed to view"}
 
 
 @router.put(
     '/set_clean_status/{req_id}',
     status_code=status.HTTP_200_OK,
-    response_model=Optional[schemas.RequestExpertBase],
+    response_model=schemas.MessageSent,
     tags=['expert requests'],
 )
-def set_clean_status(req_id: int = Query(ge=0), expert_service: ExpertService = Depends()):
-    return expert_service.set_status(req_id, "clean")
+def set_clean_status(
+        req_id: int,
+        background_tasks: BackgroundTasks,
+        expert_service: ExpertService = Depends()
+):
+    if req_id < 0:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='negative parameter')
+    background_tasks.add_task(expert_service.set_status, req_id, "clean")
+    return {"message": "status changed to clean"}

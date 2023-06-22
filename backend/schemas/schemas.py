@@ -45,6 +45,10 @@ class TokenSchema(BaseModel):
     token_type: str = 'bearer'
 
 
+class MessageSent(OrmMode):
+    message: str
+
+
 class CreateRequest(OrmMode):
     address: str
     photo_names: Optional[str]
