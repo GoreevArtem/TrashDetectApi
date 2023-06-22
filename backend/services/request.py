@@ -5,7 +5,7 @@ from typing import Optional, Dict
 import aiofiles as aiofiles
 from fastapi import Depends, HTTPException, status, UploadFile, File
 from fastapi.responses import FileResponse
-from sqlalchemy import func
+from sqlalchemy import func, and_
 from sqlalchemy.orm import joinedload
 
 import utils.create_sourse
@@ -101,7 +101,25 @@ class RequestService:
                 detail='Address entered incorrectly'
             )
 
-    def get_requests(self, limit: int = 10) -> Optional[Dict[str, schemas.Request]]:
+    def get_request(self, req_id: int) -> Optional[schemas.Request]:
+        try:
+            data = self.session.query(models.Request) \
+                .options(
+                joinedload(models.Request.address),
+                joinedload(models.Request.region_operator),
+                joinedload(models.Request.expert)
+            ) \
+                .filter(and_(models.Request.user_id == self.user_id, models.Request.id == req_id)).first()
+            data.__dict__["expert"] = \
+                data.__dict__["expert"].__dict__["name"]
+            data.__dict__["region_operator"] = \
+                data.__dict__["region_operator"].__dict__["reg_oper_name"]
+            return data
+        except:
+            return None
+
+
+    def get_all_requests(self, limit: int = 10) -> Optional[Dict[str, schemas.Request]]:
         try:
             data = self.session.query(models.Request) \
                 .options(

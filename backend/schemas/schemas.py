@@ -114,5 +114,5 @@ class RequestExpert(RequestExpertBase):
     region_operator: str
     expert: str
     request_date: datetime
-    photo_names: str
+    photo_names: Optional[str]
     address: Address
