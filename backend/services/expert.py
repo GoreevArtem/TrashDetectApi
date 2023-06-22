@@ -165,7 +165,4 @@ class ExpertService(UserService):
                 self.session.refresh(data)
             return data
         else:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail='Not found'
-            )
+            raise HTTPException(status_code=404, detail="Not found")
