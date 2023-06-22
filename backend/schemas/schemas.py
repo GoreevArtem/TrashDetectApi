@@ -69,7 +69,7 @@ class Request(OrmMode):
     id: int
     address: Address
     photo_names: Optional[str]
-    class_trash: Optional[str]
+    garbage_classes: Optional[str]
     request_date: datetime
     region_operator: Optional[str]
     expert: Optional[str]

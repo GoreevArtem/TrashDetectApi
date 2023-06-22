@@ -37,6 +37,7 @@ class RequestService:
         address_request = models.Address()
 
         request.photo_names = new_request.photo_names
+        request.garbage_classes = new_request.class_trash
 
         user.requests.extend([request])
 
