@@ -147,11 +147,12 @@ class ExpertService(UserService):
         user = self.__get_me()
         request = self.session.query(models.Request).filter(and_(models.Request.id == req_id,
                                                                  models.Request.expert_id == user.id)).first()
-        os.chdir(os.path.join("..", "source_users_photo"))
-        if request.photo_names is not None:
-            path = os.path.join("..", "source_users_photo", str(request.user_id), str(request.photo_names))
-            if os.path.exists(path):
-                return path
+        if request is not None:
+            os.chdir(os.path.join("..", "source_users_photo"))
+            if request.photo_names is not None:
+                path = os.path.join("..", "source_users_photo", str(request.user_id), str(request.photo_names))
+                if os.path.exists(path):
+                    return path
         else:
             raise HTTPException(status_code=404, detail="Photo not found")
 
