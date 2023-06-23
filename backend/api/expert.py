@@ -4,10 +4,12 @@ from fastapi import APIRouter, status, Depends, HTTPException, Query
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import FileResponse
 from redis.commands.json.path import Path
+from sqlalchemy.orm import Session
 
+from database.db import get_session
 from database.redis import redis_startup
 from schemas import schemas
-from services.expert import Expert, ExpertService
+from services.expert import Expert, ExpertService, set_status
 
 router = APIRouter(
     prefix='/expert',
@@ -40,9 +42,6 @@ async def authenticate_user(
     return auth_service.authenticate_expert(payload)
 
 
-##
-# TODO UPDATE SCHEMAS
-##
 @router.get(
     '/me',
     status_code=status.HTTP_200_OK,
@@ -118,8 +117,8 @@ def download_photo(req_id: int = Query(ge=0), expert_service: ExpertService = De
     response_model=Optional[schemas.RequestExpertBase],
     tags=['expert requests'],
 )
-def set_view_status(req_id: int = Query(ge=0), expert_service: ExpertService = Depends()):
-    return expert_service.set_status(req_id, "view")
+def set_view_status(req_id: int = Query(ge=0), session: Session = Depends(get_session)):
+    return set_status(req_id, "view", session)
 
 
 @router.patch(
@@ -128,5 +127,5 @@ def set_view_status(req_id: int = Query(ge=0), expert_service: ExpertService = D
     response_model=Optional[schemas.RequestExpertBase],
     tags=['expert requests'],
 )
-def set_clean_status(req_id: int = Query(ge=0), expert_service: ExpertService = Depends()):
-    return expert_service.set_status(req_id, "clean")
+def set_clean_status(req_id: int = Query(ge=0), session: Session = Depends(get_session)):
+    return set_status(req_id, "clean", session)

@@ -32,16 +32,34 @@ async def create_request(
 @router.get(
     '/get_request',
     status_code=status.HTTP_200_OK,
-    response_model=Optional[Dict[str, schemas.Request]],
+    response_model=Optional[schemas.Request],
     dependencies=[Depends(JWTBearer())]
 )
 async def get_request(
+        req_id: int = Query(ge=0),
+        request_service: RequestService = Depends()
+):
+    key = str(request_service.user_id) + "_get_request_" + str(req_id)
+    if redis_startup.json().get(key) is None:
+        data = request_service.get_request(req_id)
+        redis_startup.json().set(key, Path.root_path(), jsonable_encoder(data))
+        redis_startup.expire(key, 30)
+    return redis_startup.json().get(key)
+
+
+@router.get(
+    '/get_all_requests',
+    status_code=status.HTTP_200_OK,
+    response_model=Optional[Dict[str, schemas.Request]],
+    dependencies=[Depends(JWTBearer())]
+)
+async def get_all_requests(
         limit: int = Query(default=10, ge=0),
         request_service: RequestService = Depends()
 ):
-    key = str(request_service.user_id) + "_get_request_" + str(limit)
+    key = str(request_service.user_id) + "_get_all_request_" + str(limit)
     if redis_startup.json().get(key) is None:
-        data = request_service.get_request(limit)
+        data = request_service.get_all_requests(limit)
         redis_startup.json().set(key, Path.root_path(), jsonable_encoder(data))
         redis_startup.expire(key, 30)
     return redis_startup.json().get(key)

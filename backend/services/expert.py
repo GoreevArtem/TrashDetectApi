@@ -114,8 +114,8 @@ class ExpertService(UserService):
             self.session.refresh(user)
 
     def get_all_requests(self, limit: int = 10):
-        user = self.__get_me()
         try:
+            user = self.__get_me()
             all_requests = self.session.query(models.Request).options(
                 joinedload(models.Request.address),
                 joinedload(models.Request.expert),
@@ -147,24 +147,22 @@ class ExpertService(UserService):
         user = self.__get_me()
         request = self.session.query(models.Request).filter(and_(models.Request.id == req_id,
                                                                  models.Request.expert_id == user.id)).first()
-        if request is not None:
+        if request is not None and request.photo_names is not None:
             os.chdir(os.path.join("..", "source_users_photo"))
-            if request.photo_names is not None:
-                path = os.path.join("..", "source_users_photo", str(request.user_id), str(request.photo_names))
-                if os.path.exists(path):
-                    return path
+            path = os.path.join("..", "source_users_photo", str(request.user_id), str(request.photo_names))
+            if os.path.exists(path):
+                return path
         else:
             raise HTTPException(status_code=404, detail="Photo not found")
 
-    def set_status(self, req_id: int, status: str):
-        user = self.__get_me()
-        data = self.session.query(models.Request).filter(and_(models.Request.id == req_id,
-                                                              models.Request.expert_id == user.id)).first()
-        if data is not None:
-            if data.status != status:
-                data.status = status
-                self.session.commit()
-                self.session.refresh(data)
+
+def set_status(req_id: int, status: str, session: Session):
+    data = session.query(models.Request).filter(models.Request.id == req_id).first()
+    if data is not None:
+        if data.status != status:
+            data.status = status
+            session.commit()
+            session.refresh(data)
             return data
-        else:
-            raise HTTPException(status_code=404, detail="Not found")
+    else:
+        raise HTTPException(status_code=404, detail="Not found")

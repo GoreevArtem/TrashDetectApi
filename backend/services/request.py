@@ -118,7 +118,6 @@ class RequestService:
         except:
             return None
 
-
     def get_all_requests(self, limit: int = 10) -> Optional[Dict[str, schemas.Request]]:
         try:
             data = self.session.query(models.Request) \
