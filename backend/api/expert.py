@@ -112,7 +112,7 @@ def download_photo(req_id: int = Query(ge=0), expert_service: ExpertService = De
     return expert_service.get_photo(req_id)
 
 
-@router.put(
+@router.patch(
     '/set_view_status',
     status_code=status.HTTP_200_OK,
     response_model=Optional[schemas.RequestExpertBase],
@@ -122,7 +122,7 @@ def set_view_status(req_id: int = Query(ge=0), expert_service: ExpertService = D
     return expert_service.set_status(req_id, "view")
 
 
-@router.put(
+@router.patch(
     '/set_clean_status',
     status_code=status.HTTP_200_OK,
     response_model=Optional[schemas.RequestExpertBase],

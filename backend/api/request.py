@@ -50,7 +50,6 @@ async def get_request(
 @router.post(
     "/detection",
     status_code=status.HTTP_200_OK,
-    # response_model=Optional[Dict[str, schemas.FindClassTrash]],
     response_model=Optional[schemas.FindClassTrash],
     dependencies=[Depends(JWTBearer())],
 )
