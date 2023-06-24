@@ -164,12 +164,12 @@ class ExpertService(UserService):
                 data.status = status
                 self.session.commit()
                 self.session.refresh(data)
-                return data
+            return data
         else:
             raise HTTPException(status_code=404, detail="Not found")
 
     def set_status_view(self, req_id: int):
-        self.__set_status(req_id, "view")
+        return self.__set_status(req_id, "view")
 
     def set_status_clean(self, req_id: int):
-        self.__set_status(req_id, "clean")
+        return self.__set_status(req_id, "clean")
