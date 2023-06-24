@@ -155,14 +155,28 @@ class ExpertService(UserService):
         else:
             raise HTTPException(status_code=404, detail="Photo not found")
 
+    def set_status_view(self, req_id: int):
+        user = self.__get_me()
+        data = self.session.query(models.Request).filter(and_(models.Request.id == req_id,
+                                                              models.Request.expert_id == user.id)).first()
+        if data is not None:
+            if data.status != "view":
+                data.status = "view"
+                self.session.commit()
+                self.session.refresh(data)
+                return data
+        else:
+            raise HTTPException(status_code=404, detail="Not found")
 
-def set_status(req_id: int, status: str, session: Session):
-    data = session.query(models.Request).filter(models.Request.id == req_id).first()
-    if data is not None:
-        if data.status != status:
-            data.status = status
-            session.commit()
-            session.refresh(data)
-            return data
-    else:
-        raise HTTPException(status_code=404, detail="Not found")
+    def set_status_clean(self, req_id: int):
+        user = self.__get_me()
+        data = self.session.query(models.Request).filter(and_(models.Request.id == req_id,
+                                                              models.Request.expert_id == user.id)).first()
+        if data is not None:
+            if data.status != "clean":
+                data.status = "clean"
+                self.session.commit()
+                self.session.refresh(data)
+                return data
+        else:
+            raise HTTPException(status_code=404, detail="Not found")
