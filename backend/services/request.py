@@ -141,9 +141,9 @@ class RequestService:
     async def detect_trash_on_photo(self, file: UploadFile = File(...)) -> Dict:
         if file.content_type.split("/")[0] != "image":
             raise HTTPException(status_code=400, detail="Invalid file type")
-        file.filename = utils.create_sourse.rename_photo(self.user_id, file.filename)
+        file.filename = utils.create_source.rename_photo(self.user_id, file.filename)
         os.chdir(os.path.join("..", "source_users_photo"))
-        utils.create_sourse.create_dir(str(self.user_id))
+        utils.create_source.create_dir(str(self.user_id))
         file_location = os.path.join("..", "source_users_photo", str(self.user_id), file.filename)
         async with aiofiles.open(file_location, 'wb') as f:
             await f.write(file.file.read())
