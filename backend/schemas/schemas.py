@@ -118,5 +118,6 @@ class RequestExpert(RequestExpertBase):
     region_operator: str
     expert: str
     request_date: datetime
+    garbage_classes: Optional[str]
     photo_names: Optional[str]
     address: Address
