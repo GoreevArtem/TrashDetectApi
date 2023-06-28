@@ -1,0 +1,159 @@
+.str{
+    margin: 50px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.str-title{
+    background: #C7F3C3;
+    border-radius: 8px;
+    font-family: 'Freeride';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 26px;
+    line-height: 32px;
+    color: #000000;
+    padding: 8px 19px;
+}
+
+.str-next{
+    font-family: 'Freeride';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 25px;
+    color: #FFFFFF;
+    width: 160px;
+    height: 23px;
+    background: #7FB07C;
+    border-radius: 10px;
+    text-align: center;
+    padding: 12px 0;
+    border: none;
+    margin-top: 40px;
+}
+
+.str-block
+{
+    display: block;
+    margin-left: 142px;
+    width: 519px;
+}
+
+.info-input{
+    padding-left: 19px;
+    background: #EAF6E9;
+    border-radius: 8px;
+    border: none;
+    font-family: 'Freeride';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 32px;
+    color: black;
+    outline:none;
+    width: 487px;
+    height: 48px;
+}
+
+.form_radio_btn {
+	display: inline-block;
+	margin-right: 10px;
+}
+.form_radio_btn input[type=radio] {
+	display: none;
+}
+.form_radio_btn label {
+	display: inline-block;
+	cursor: pointer;
+	padding: 0px 15px;
+	line-height: 34px;
+	border: 1px solid #999;
+	border-radius: 6px;
+	
+    font-size: 22px;
+    font-family: 'Freeride';
+    margin: 10px 2px 0 0;
+}
+ 
+
+.form_radio_btn label:hover {
+	background-color: #EAF6E9;
+}
+
+#t1
+{
+    font-family: 'Freeride';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    color: black;
+    padding-bottom: 3px;
+    border-bottom: 2px solid black;
+    width: 240px;
+}
+
+#t2
+{
+    font-family: 'Freeride';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    color: black;
+    padding-bottom: 3px;
+    border-bottom: 2px solid black;
+    width: 506px;
+}
+
+.cont {
+    display: flex;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: #C7F3C3;
+    margin-top: 232px;
+    padding: 20px;
+    height: 202px;
+    border-radius: 10px;
+    width: 823px;
+    font-family: 'Freeride';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 26px;
+    line-height: 32px;
+    color: #000000;
+    text-align: center;
+    box-shadow: 0 0 10px 10px white;
+}
+
+.modal {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+}
+
+.report-btn {
+    height: 42px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Freeride';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    color: #FFFFFF;
+    background: #7FB07C;
+    border-radius: 10px;
+    width: 100px;
+    cursor: pointer;
+    margin: 34px auto;
+}

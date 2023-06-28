@@ -1,0 +1,126 @@
+.login{
+    width: 443px;
+    height: auto;
+    background: #C7F3C3;
+    border-radius: 10px;
+    padding: 27px 38px;
+    margin: 125px auto;
+}
+.login-title{
+    font-family: 'Freeride';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 38px;
+    text-align: center;
+    color: #000000;
+}
+
+.login-field__title{
+    font-family: 'Freeride';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 33px;
+    color:black;
+    margin: 8px 0;
+}
+.login-field__input{
+    height: 43px;
+    width: 415px;
+    padding: 8px 14px;
+    background: #FFFFFF;
+    border-radius: 8px;
+    color: black;
+    border: none;
+    font-family: 'Freeride';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 27px;
+    margin-bottom: 20px;
+}
+button{
+    padding: 11px 14px;
+    width: 250px;
+    height: 58px;
+    display: flex;
+    text-align: center;
+    background: #7FB07C;
+    border-radius: 10px;
+    font-family: 'Freeride';
+    font-size: 26px;
+    color: #FFFFFF;
+    margin: 24px auto 0 auto;
+    cursor: pointer;
+}
+.login-forgot-pass{
+    font-family: 'Freeride';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 27px;
+    color: #000000;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+}
+
+a{
+    text-decoration: none;
+    color: #fff;
+}
+
+input:focus{outline: 2px solid #7FB07C}
+
+span{
+    font-family: 'Freeride';
+    font-size: 20px;
+    color: red;
+    font-weight: 600;
+}
+
+#blockCheck {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 20px;
+}
+
+input[type="checkbox"] {
+    display: none;
+}
+
+label {
+    color: black;
+    cursor: default;
+    font-weight: normal;
+    font-family: 'Freeride';
+    font-size: 24px;
+}
+
+label:before {
+    content: " ";
+    color: #000;
+    display: inline-block;
+    font: 27px/27px 'Freeride';
+    margin-right: 15px;
+    position: relative;
+    text-align: center;
+    text-indent: 0px;
+    width: 24px;
+    height: 24px;
+    background: #FFF;
+    margin-top:-4px;
+    border: 1px solid #7FB07C;
+    border-image: initial;
+    vertical-align: middle;
+}
+
+input:checked+label:before {
+    content: "✓";
+}
+
+input:disabled+label:before {
+    background: #eee;
+    color: #aaa;
+}

@@ -1,0 +1,61 @@
+.footer {
+    flex: 0 0 auto;
+    height: 90px;
+    background: #7FB07C;
+    margin-top: 50px;
+}
+
+.footer-cont {
+    display: flex;
+    flex-direction: row;
+}
+
+.footer-title {
+    font-family: 'Freeride';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 26px;
+    color: #FFFFFF;
+    margin: 29px 0px 29px 50px;
+}
+
+.footer-leftline {
+    width: 1px;
+    height: 60px;
+    background: white;
+    margin: 15px 0px 15px 49px;
+}
+
+.footer-mid
+{
+    font-family: 'Freeride';
+    color: #FFFFFF;
+    font-weight: 400;
+    font-size: 26px;
+    font-style: normal;
+    margin:29px 0px  29px 271px;
+}
+
+.footer-rightline {
+    width: 1px;
+    height: 60px;
+    background: white;
+    margin: 15px 0px 15px 271px;
+}
+
+
+.vk
+{
+    background-image: url("../../../../../assets/image/Group 26.png");
+    width: 68px;
+    height: 68px;
+    margin:11px 0 11px 47px;
+}
+
+.tg
+{
+    background-image: url("../../../../../assets/image/Group 27.png");
+    width: 58px;
+    height: 58px;
+    margin: 15px 47px 17px 41px; 
+}

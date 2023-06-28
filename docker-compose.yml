@@ -49,6 +49,18 @@ services:
       - "8080:8080"
     networks:
       - network
+  client:
+    stdin_open: true
+    container_name: front
+    restart: always
+    ports:
+      - "4000:3001"
+    build:
+      dockerfile: Dockerfile
+      context: ./frontend
+    networks:
+      - network
+
 volumes:
   postgres_data:
 

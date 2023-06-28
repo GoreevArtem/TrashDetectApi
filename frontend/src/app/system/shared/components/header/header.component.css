@@ -1,0 +1,160 @@
+.header {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 0 auto;
+    border-bottom: 2px solid #7FB07C;
+    width: 97%;
+    background-color: #FFFFFF;
+    z-index: 2501;
+    flex: 0 0 auto;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 30px;
+    padding: 20px;
+}
+
+.header-title {
+    font-family: 'Freeride';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 40px;
+    line-height: 49px;
+    color: #170303;
+}
+
+.header-leftline {
+    width: 2px;
+    height: 98px;
+    background:  #7FB07C;
+}
+
+.header-mid {
+    align-items: center;
+    flex-direction: row;
+    gap: 10%;
+    justify-content: center;
+
+    display: flex;
+    width: 70%;
+
+}
+
+.header-mid__title {
+    font-family: 'Freeride';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 32px;
+    line-height: 39px;
+    color: #000000;
+    cursor: pointer;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: 15px;
+    padding: 20px;
+}
+
+
+.menu-button-container {
+    display: flex;
+    height: 100%;
+    width: 30px;
+    cursor: pointer;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+
+.header-mid a:hover
+{
+    border-bottom: 3px solid #7FB07C;
+}
+
+.header-mid a:active
+{
+    border-bottom: 3px solid #7FB07C;
+}
+
+.header-right a:hover
+{
+    border-bottom: 3px solid #7FB07C;
+}
+
+.header-right a:active
+{
+    border-bottom: 3px solid #7FB07C;
+}
+
+a {
+    text-decoration: none;
+}
+
+.img1
+{
+    width: 52px;
+    height: 52px;
+    margin: 44px 0px 45px 50px;
+}
+
+.img2
+{
+    width: 22px;
+    height: 22px;
+    margin: 59px 50px 60px 8px;
+}
+
+.bl
+{
+    display: flex;
+    flex-direction: row;
+}
+
+.dropDown
+{
+    background: white;
+    border: 1px solid rgb(226, 226, 226);
+    border-radius: 4px;
+    position: absolute;
+    top: 95px;
+    margin-left: -50px;
+    width: 200px;
+    height: 100px;
+    display: block;
+}
+
+.text1
+{
+    font-family: 'Freeride';
+    font-size: 24px;
+    margin:15px 54px 0 54px;
+}
+
+.text2
+{
+    font-family: 'Freeride';
+    font-size: 24px;
+    margin:9px 68px 16px 68px;
+}
+
+#enter
+{
+    font-family: 'Freeride';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 32px;
+    line-height: 39px;
+    color: #000000;
+    cursor: pointer;
+}

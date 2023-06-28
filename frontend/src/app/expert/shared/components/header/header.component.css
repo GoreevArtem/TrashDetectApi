@@ -1,0 +1,37 @@
+@font-face {
+    font-family: 'Freeride';
+    src: url('../../../../../assets/Freeride/Freeride.otf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+.header {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 0 auto;
+    border-bottom: 2px solid #7FB07C;
+    width: 97%;
+    background-color: #FFFFFF;
+    z-index: 2501;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+.header-title {
+    font-family: 'Freeride';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 40px;
+    line-height: 49px;
+    color: #170303;
+    margin: 30px 0;
+}
