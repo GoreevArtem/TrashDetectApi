@@ -1,0 +1,22 @@
+<div class="info">
+    <div class="info-title">Контакты</div>
+    <div class="info-input">
+        г. Нижний Новгород
+    </div>
+    <div class="info-input" style="word-spacing: 1rem;">
+        artiom.goreev@yandex.ru masha.bozhkoo@yandex.ru
+    </div>
+    <div class="button" (click)="open()">
+        <img id="img" src="../../../assets/image/Group 266.png">
+      <div id="text">Написать комментарий о сервисе</div> 
+    </div>
+   
+    <div *ngIf="isOpen" class="modal">
+        <div class="modal-content">
+            <span span (click)="open()" class="close">&times;</span>
+            <div class="classification-title">Комментарий о сервисе</div>
+            <textarea class="textarea-report"></textarea>
+            <div class="report-btn">Отправить</div>
+        </div>
+    </div>
+</div>

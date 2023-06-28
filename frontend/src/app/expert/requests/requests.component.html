@@ -1,0 +1,134 @@
+<div id="req">
+    <div id="block-left">
+        <div class="block-row">
+            <div id="first-left-block">
+                <img id="img" src="../../../assets/image/Group 251.png">
+            </div>
+            <div class="block-column" *ngIf="!formPass">
+                <div class="block">
+                    <div class="row">
+                        <input type="text" placeholder="Найти..." id="inp" [(ngModel)]="searchText">
+                        <button id="but">
+                            <img src="../../../assets/image/Group 248.png">
+                        </button>
+                    </div>
+                </div>
+                <div id="three-button">
+                    <div class="filter-two">
+                        <div class="block-row" (click)="newReq()">
+                            <img class="img-filter" src="../../../assets/image/Group 228.png">
+                            <div id="text1-filter">Новые</div>
+                        </div>
+                    </div>
+                    <div class="filter" id="mid-filter">
+                        <div class="block-row" (click)="viewedReq()">
+                            <img class="img-filter" src="../../../assets/image/Group 227.png">
+                            <div id="text1-filter">Просмотренные</div>
+                        </div>
+                    </div>
+                    <div class="filter-two">
+                        <div class="block-row" (click)="cleanReq()">
+                            <img class="img-filter" src="../../../assets/image/Group 298.png">
+                            <div id="text1-filter">Убран мусор</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="block-row">
+            <div class="block-column">
+                <div id="second-left-block">
+                    <div id="text-second-left-block">{{email}}</div>
+                </div>
+                <div id="three-left-block" *ngIf="!formPass">
+                    <div id="text-three-left-block" (click)="change()">Изменить пароль</div>
+                </div>
+                <div id="three-left-block" *ngIf="!formPass">
+                    <div id="text-three-left-block" (click)="logout()">Выйти из аккаунта</div>
+                </div>
+            </div>
+            <div *ngIf="!formPass">
+                <div class="block-column" *ngIf="mainCont">
+                    <div class="block2" *ngFor="let c of arr | searchEx: searchText">
+                        <div class="num">
+                            <div id="text1">{{c.id}}</div>
+                        </div>
+                        <div class="text-mid">
+                            Найден мусор: {{c.adress}}, {{c.request_date}}
+                        </div>
+                        <div id="block-text" (click)="openCard(c.id)">
+                            <div class="text-status">
+                               Посмотреть
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="!formPass">
+            <div class="block-column" *ngIf="!mainCont">
+                <div class="block2" *ngFor="let c of arrOptionReq | searchEx: searchText">
+                    <div class="num">
+                        <div id="text1">{{c.id}}</div>
+                    </div>
+                    <div class="text-mid">
+                        Найден мусор: {{c.adress}}, {{c.request_date}}
+                    </div>
+                    <div id="block-text" (click)="openCard(c.id)">
+                        <div class="text-status">
+                           Посмотреть
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+            <div *ngIf="formPass" id="form1">
+                <form class="login" [formGroup]="form1" (ngSubmit)="changePassword()" >
+                    <div class="login-title">
+                        Смена пароля
+                    </div>
+                
+                    <div class="login-field">
+                        <div class="login-field__title">
+                            Новый пароль
+                        </div>
+                        <input placeholder="Введите пароль" formControlName="password" class="login-field__input" type="password">
+                        <span *ngIf="form1.controls['password'].invalid && form1.controls['password'].touched">
+                            <span *ngIf="form1.controls['password'].errors?.['required']"> Пароль не может быть пустым</span>
+                            <span *ngIf="form1.controls['password'].errors?.['minlength']">
+                                Длина пароля должна составлять минимум 6 символов
+                            </span>
+                        </span>
+                    </div>
+                    <div class="login-field">
+                        <div class="login-field__title">
+                            Подтвердите новый пароль
+                        </div>
+                        <input placeholder="Подтвердите пароль" formControlName="confirmPassword" class="login-field__input" type="password">
+                        
+                        <span *ngIf="form1.controls['confirmPassword'].touched">
+                            <span *ngIf="form1.errors?.['passwordmatcherror']">Пароли не совпадают</span>
+                        </span>
+                    </div>
+                    <button type="submit" [disabled]="form1.invalid" class="login-btn">
+                        Сохранить
+                    </button>
+                </form>
+            </div>
+            
+        </div>
+
+        
+    </div>
+</div>
+
+<div class="cont" *ngIf="isOpen1">
+    <div class="button-res">
+        <div  class="modal">
+            <div class="modal-content">
+                <p>Вы ввели старый пароль. Придумайте новый!</p>
+                <div class="report-btn" (click)="close1()">Ок</div>
+            </div>
+        </div>
+    </div>
+</div>
+

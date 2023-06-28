@@ -1,0 +1,16 @@
+<div class="stepper">
+    <div  class="stepper-step">1</div>
+    <div class="stepper-line"></div>
+    <div style="border: 3px solid #61895E;" class="stepper-step">2</div>
+    <div class="stepper-line"></div>
+    <div class="stepper-step">3</div>
+</div>
+<div class="info">
+    <div class="info-title">Загруженный файл</div>
+    <div class="info-files">{{file}}</div>
+    <div class="info-title">Введите адрес места на фото</div>
+    <input placeholder="Нижний Новгород, ул. Новые пески, 84" class="info-input" type="text" name="adress" [(ngModel)]="adress" (change)="setValues($event)"/>
+    <div class="info-load" routerLinkActive="active" *ngIf="next">
+        <a  [routerLink]="['/system', 'search-trash','result']" style=" text-decoration: none;color:white">Далее</a>
+    </div>
+</div>

@@ -1,0 +1,98 @@
+<div class="block-area" *ngIf="flagM">
+    <div class="block-text">
+        <div class="txt1" id="oneTxt">Логин</div>
+        <div class="txt1" id="threeTxt">{{email}}</div>
+        <div class="txt2" id="sixTxt" (click)="cLogin()">изменить</div>
+    </div>
+    <div class="block-text">
+        <div class="txt1" id="twoTxt">Количество найденного мусора</div>
+        <div class="txt1" id="fourTxt">{{amount_garbage}}</div>
+    </div>
+    <div class="txt2" id="fiveTxt" (click)="cPassword()">Сменить пароль</div>
+</div>
+<div class="button-acc" *ngIf="flagM">
+    <div id="button-text" (click)="deleteUser()">Удалить учетную запись</div>
+</div>
+
+<div *ngIf="flagP" id="form1">
+    <form class="login" [formGroup]="form1" (ngSubmit)="changePassword()" >
+        <div class="login-title">
+            Смена пароля
+        </div>
+    
+        <div class="login-field">
+            <div class="login-field__title">
+                Новый пароль
+            </div>
+            <input placeholder="Введите пароль" formControlName="password" class="login-field__input" type="password">
+            <span *ngIf="form1.controls['password'].invalid && form1.controls['password'].touched">
+                <span *ngIf="form1.controls['password'].errors?.['required']"> Пароль не может быть пустым</span>
+                <span *ngIf="form1.controls['password'].errors?.['minlength']">
+                    Длина пароля должна составлять минимум 6 символов
+                </span>
+            </span>
+        </div>
+        <div class="login-field">
+            <div class="login-field__title">
+                Подтвердите новый пароль
+            </div>
+            <input placeholder="Подтвердите пароль" formControlName="confirmPassword" class="login-field__input" type="password">
+            
+            <span *ngIf="form1.controls['confirmPassword'].touched">
+                <span *ngIf="form1.errors?.['passwordmatcherror']">Пароли не совпадают</span>
+            </span>
+        </div>
+        <button type="submit" [disabled]="form1.invalid" class="login-btn">
+            Сохранить
+        </button>
+    </form>
+</div>
+
+
+<div *ngIf="flagL" id="form1">
+    <form class="login2" [formGroup]="form2" (ngSubmit)="changeLogin()" >
+        <div class="login-title">
+            Смена логина
+        </div>
+    
+        <div>
+            <div class="login-field__title">
+                Новый логин
+            </div>
+            <input placeholder="Введите почту" formControlName="email" class="login-field__input" type="text">
+         
+          <span *ngIf="form2.controls['email'].invalid && form2.controls['email'].touched">
+            <span *ngIf="form2.controls['email'].errors?.['required']" > Email не может быть пустым</span> 
+            <span *ngIf="form2.controls['email'].errors?.['email']" > Email не соответствует стандарту</span> 
+          </span>
+           
+        </div>
+        <button type="submit" [disabled]="form2.invalid" class="login-btn">
+            Сохранить
+        </button>
+    </form>
+</div>
+
+
+<div class="cont" *ngIf="isOpen1">
+    <div class="button-res">
+        <div  class="modal">
+            <div class="modal-content">
+                <p>Вы ввели старый пароль. Придумайте новый!</p>
+                <div class="report-btn" (click)="close1()">Ок</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="cont" *ngIf="isOpen2">
+    <div class="button-res">
+        <div  class="modal">
+            <div class="modal-content">
+                <p>Вы ввели старый логин. Придумайте новый!</p>
+                <div class="report-btn" (click)="close2()">Ок</div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,25 @@
+<div class="str">
+    <div class="str-block">
+        <div class="str-title">Опишите, где вы видели мусор</div>
+        <p id="t1">Выберете класс мусора</p>
+        <div class="form_radio_btn" *ngFor="let i of classesTrash">
+            <input type="radio" id="{{i.nameClass}}" value="{{i.nameClass}}" (change)="getVal($event)">
+            <label for="{{i.nameClass}}">{{i.nameClass}}</label>
+        </div>
+
+        <p id="t2">Ввведите адрес, по которому был обнаружен мусор</p>
+        <input placeholder="Нижний Новгород, ул. Новые пески, 84" class="info-input" type="text" name="adress" [(ngModel)]="adress" />
+    </div>
+    <div class="str-next" (click)="done()">
+        Готово
+    </div>
+</div>
+<div class="cont" *ngIf="isOpen">
+    <div  class="modal">
+        <div class="modal-content">
+            <p>Спасибо за то, что неравнодушны к экологической повестке своего города!</p>
+            <p>Вы создали заявку, следить за статусом которой можете в своем профиле.</p>
+            <div class="report-btn" (click)="close()">Ок</div>
+        </div>
+    </div>
+</div>

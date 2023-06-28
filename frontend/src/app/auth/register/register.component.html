@@ -1,0 +1,118 @@
+<form class="login" [formGroup]="form1" (ngSubmit)="onSingup()" *ngIf="formUser">
+    <div class="login-title">
+        Регистрация
+    </div>
+    <div>
+        <div class="login-field__title">
+            Имя
+        </div>
+        <input placeholder="Введите имя" formControlName="name" class="login-field__input" type="text">
+
+        <span *ngIf="form1.controls['name'].touched">
+            <span *ngIf="form1.controls['name'].errors?.['required']"> Имя не может быть пустым</span>
+        </span>
+    </div>
+    <div>
+        <div class="login-field__title">
+            Логин
+        </div>
+        <input placeholder="Введите почту" formControlName="email" class="login-field__input" type="text">
+
+        <span *ngIf="form1.controls['email'].invalid && form1.controls['email'].touched">
+            <span *ngIf="form1.controls['email'].errors?.['required']"> Email не может быть пустым</span>
+            <span *ngIf="form1.controls['email'].errors?.['email']"> Email не соответствует стандарту</span>
+        </span>
+    </div>
+    <div class="login-field">
+        <div class="login-field__title">
+            Пароль
+        </div>
+        <input placeholder="Введите пароль" formControlName="password" class="login-field__input" type="password">
+        <span *ngIf="form1.controls['password'].invalid && form1.controls['password'].touched">
+            <span *ngIf="form1.controls['password'].errors?.['required']"> Пароль не может быть пустым</span>
+            <span *ngIf="form1.controls['password'].errors?.['minlength']">
+                Длина пароля должна составлять минимум 6 символов
+            </span>
+        </span>
+    </div>
+    <div>
+        <div class="login-field__title">
+            Подтвердите пароль
+        </div>
+        <input placeholder="Подтвердите пароль" formControlName="confirmPassword" class="login-field__input" type="password">
+        
+        <span *ngIf="form1.controls['confirmPassword'].touched">
+            <span *ngIf="form1.errors?.['passwordmatcherror']">Пароли не совпадают</span>
+        </span>
+    </div>
+    <div id="blockCheck" (change)="open($event);">
+        <input type="checkbox" id="checkbox-id" />
+        <label for="checkbox-id">Эксперт</label>       
+    </div>
+    <button [disabled]="form1.invalid" type="submit" >
+        Зарегистрироваться
+    </button> 
+</form>
+
+<form class="login" [formGroup]="form2"  (ngSubmit)="onSingupEx()" *ngIf="!formUser">
+    <div class="login-title" >
+        Регистрация
+    </div>
+    <div>
+        <div class="login-field__title">
+            Логин
+        </div>
+        <input placeholder="Введите почту" formControlName="emailEx" class="login-field__input" type="text">
+     
+      <span *ngIf="form2.controls['emailEx'].invalid && form2.controls['emailEx'].touched">
+        <span *ngIf="form2.controls['emailEx'].errors?.['required']" > Email не может быть пустым</span> 
+        <span *ngIf="form2.controls['emailEx'].errors?.['emailEx']" > Email не соответствует стандарту</span> 
+      </span>
+       
+    </div>
+    <div>
+        <div class="login-field__title">
+            Имя
+        </div>
+        <input placeholder="Введите имя" formControlName="nameEx" class="login-field__input" type="text">
+
+        <span *ngIf="form2.controls['nameEx'].touched">
+            <span *ngIf="form2.controls['nameEx'].errors?.['required']"> Имя не может быть пустым</span>
+        </span>
+    </div>
+    <div>
+        <div class="login-field__title">
+            Региональный оператор
+        </div>
+        <input placeholder="Введите региоанльного оператора" formControlName="regOperEx" class="login-field__input" type="text">
+      <span *ngIf="form2.controls['regOperEx'].touched">
+        <span *ngIf="form2.controls['regOperEx'].errors?.['required']" >Поле не может быть пустым</span> 
+      </span>
+    </div>
+    <div>
+        <div class="login-field__title">
+            Пароль
+        </div>
+        <input placeholder="Введите пароль" formControlName="passwordEx" class="login-field__input" type="password">
+        <span *ngIf="form2.controls['passwordEx'].invalid && form2.controls['passwordEx'].touched">
+        <span *ngIf="form2.controls['passwordEx'].errors?.['required']"> Пароль не может быть пустым</span>
+        <span *ngIf="form2.controls['passwordEx'].errors?.['minlength']">
+            Длина пароля должна составлять минимум 6 символов
+        </span>
+        </span>
+    </div>
+    <div>
+        <div class="login-field__title">
+            Подтвердите пароль
+        </div>
+        <input placeholder="Подтвердите пароль" formControlName="confirmPasswordEx" class="login-field__input" type="password">
+        
+        <span *ngIf="form2.controls['confirmPasswordEx'].touched">
+            <span *ngIf="form2.errors?.['passwordmatcherrorEx']">Пароли не совпадают</span>
+        </span>
+    </div>
+    <button [disabled]="form2.invalid" type="submit" >
+        Зарегистрироваться
+    </button> 
+</form>
+

@@ -1,0 +1,43 @@
+<div class="block">
+    <div class="row">
+        <input type="text" placeholder="Найти..." [(ngModel)]="searchText">
+        <button id="but">
+            <img src="../../../../assets/image/Group 248.png">
+        </button>
+    </div>
+</div>
+
+<div class="block2" *ngFor="let c of arr | search: searchText">
+    <div class="num">
+        <div id="text1">{{c.id}}</div>
+    </div>
+    <div class="text-mid" (click)="openCard(c.id)">
+       Найден мусор: {{c.adress}}, {{c.request_date}}
+    </div>
+    <div id="red" *ngIf="c.redFlag">
+        <div class="text-status">
+           {{c.status}}
+        </div>
+    </div>
+    <div id="yellow" *ngIf="c.yellowFlag">
+        <div class="text-status">
+           {{c.status}}
+        </div>
+    </div>
+    <div id="green" *ngIf="c.greenFlag">
+        <div class="text-status">
+           {{c.status}}
+        </div>
+    </div>
+</div>
+
+<div class="block3">
+    <button class="button-bl3" (click)="update()">
+        <img id="img1" src="../../../assets/image/Group 245.png">
+        <div id="text1">Обновить страницу</div>
+    </button>
+    <div class="button-bl3" id="two-bt-bl3" routerLinkActive="active">
+        <img id="img2" src="../../../assets/image/Group 24.png">
+        <a id="text2" [routerLink]="['/system','instruction']">Поиск мусора</a>
+    </div>
+</div>
