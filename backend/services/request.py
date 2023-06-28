@@ -39,8 +39,8 @@ class RequestService:
         request.garbage_classes = new_request.class_trash
 
         user.requests.extend([request])
-
-        address_list = get_addr(new_request.address)
+        new_request = new_request.address.split(",")
+        address_list = get_addr(", ".join([new_request[0], new_request[-2], new_request[-1]]))
         if address_list is not None:
             get_id = self.session.query(models.Address).distinct().filter(
                 models.Address.address_city == address_list[-4],

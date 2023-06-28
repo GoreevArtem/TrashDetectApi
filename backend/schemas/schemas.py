@@ -50,7 +50,7 @@ class MessageSent(OrmMode):
 
 
 class CreateRequest(OrmMode):
-    address: str
+    address: Optional[str]
     photo_names: Optional[str]
     class_trash: Optional[str]
 

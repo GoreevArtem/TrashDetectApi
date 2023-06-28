@@ -53,24 +53,13 @@ services:
     stdin_open: true
     container_name: front
     restart: always
+    ports:
+      - "4000:3001"
     build:
       dockerfile: Dockerfile
       context: ./frontend
     networks:
       - network
-  nginx:
-    depends_on:
-      - client
-    image: nginx:latest
-    container_name: nginx
-    restart: always
-    volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-    ports:
-      - "4000:80"
-    networks:
-      - network
-
 
 volumes:
   postgres_data:
