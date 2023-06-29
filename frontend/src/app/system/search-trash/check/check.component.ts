@@ -21,7 +21,6 @@ export class CheckComponent {
       GlobalConfig.adress=this.adress;
       localStorage.setItem('street', this.sentAdress);
       this.next=true;
-      console.log(this.file);
     }
   }
 

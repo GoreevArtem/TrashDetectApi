@@ -1,5 +1,6 @@
 import {NgModule} from "@angular/core";
 import { Routes, RouterModule } from '@angular/router';
+import { AuthGuard } from "../shared/guards/auth.guard";
 import { AboutUsComponent } from "./about-us/about-us.component";
 import { AccountComponent } from "./account/account.component";
 import { ApplicationsComponent } from "./account/applications/applications.component";
@@ -18,17 +19,17 @@ const routes: Routes = [
     { path: 'system', component: SystemComponent,  children: [
         {path:'about-us', component:AboutUsComponent},
         {path:'search-trash', component:SearchTrashComponent, children: [
-          {path:'load-file', component: LoadFileComponent },
-          {path:'check', component: CheckComponent},
-          {path:'result', component: ResultComponent},
+          {path:'load-file', component: LoadFileComponent, canActivate: [AuthGuard]},
+          {path:'check', component: CheckComponent, canActivate: [AuthGuard]},
+          {path:'result', component: ResultComponent, canActivate: [AuthGuard]},
         ]},
-        {path:'instruction', component: InstructionComponent},
-        {path:'contacts', component:ContactsComponent},
-        {path:'no-photo', component:NoPhotoComponent},
+        {path:'instruction', component: InstructionComponent,canActivate: [AuthGuard]},
+        {path:'contacts', component:ContactsComponent,canActivate: [AuthGuard]},
+        {path:'no-photo', component:NoPhotoComponent,canActivate: [AuthGuard]},
         { path: 'account', component: AccountComponent, children: [
-          {path:'personal-area', component: PersonalAreaComponent},
-          {path:'applications', component: ApplicationsComponent },
-          {path:'card', component: CardComponent }
+          {path:'personal-area', component: PersonalAreaComponent,canActivate: [AuthGuard]},
+          {path:'applications', component: ApplicationsComponent,canActivate: [AuthGuard] },
+          {path:'card', component: CardComponent,canActivate: [AuthGuard]}
           ]}
       ]},
      

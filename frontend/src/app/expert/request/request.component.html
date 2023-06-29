@@ -21,24 +21,28 @@
                     <div class="text-mid">Найден мусор: {{c.adress}}, {{c.request_date}}</div>
                   
                 </div>
-                    <div id="imgTrash">
-                        <img class="card-img" src="../../../../assets/image/Group 48.png">
-                    </div>
-                <div id="block3">
-                    <div class="button1">
-                        <div id="b-text1" (click)="open()">Сообщить об ошибке</div>
-                    </div>
-                    <!-- <div class="button2" *ngIf="notViewFlag" (click)="view(c.id)">
-                        <div id="b-text2">{{c.status}}</div>
-                    </div>
-                    <div class="button2" *ngIf="viewFlag">
-                        <div id="b-text2">{{c.status}}</div>
-                    </div> -->
-
-                    <div class="button2" (click)="view(c.id)">
-                        <div id="b-text2">{{c.status}}</div>
-                    </div>
+                <div class="count-trash" *ngIf="c.cleanFlag" >
+                    <div id="text2"> {{c.status}}</div>
                 </div>
+                    <div id="imgTrash">
+                        <img class="card-img" [src]="c.photo_src">
+                    </div>
+                    <div id="block3">
+                        <div class="button1">
+                            <div id="b-text1" (click)="open()">Сообщить об ошибке</div>
+                        </div>
+                        <div class="button2" *ngIf="c.notViewFlag" (click)="view(c.id)">
+                            <div id="b-text2">{{c.status}}</div>
+                        </div>
+                        <div class="button2" *ngIf="c.viewFlag" (click)="clean(c.id)">
+                            <div id="b-text2">{{c.status}}</div>
+                        </div>
+                        <div class="button2" *ngIf="c.cleanFlag" (click)="noTrash()">
+                            <div id="b-text2">Ок</div>
+                        </div>
+    
+                    </div> 
+                
             </div>
             <div id="map" class="results-map"></div>
             

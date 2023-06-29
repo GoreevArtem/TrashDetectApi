@@ -29,7 +29,7 @@
             <div class="modal-content">
                 <p>Спасибо за то, что неравнодушны к экологической повестке своего города!</p>
                 <p>Вы создали заявку, следить за статусом которой можете в своем профиле.</p>
-                <a [routerLink]="['/system', 'account','personal-area']" class="report-btn" style="text-decoration: none;">Ок</a>
+                <a class="report-btn" style="text-decoration: none;" (click)="sentReq()">Ок</a>
             </div>
         
         </div>

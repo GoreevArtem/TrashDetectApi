@@ -31,6 +31,6 @@ import { RequestUserService } from "../shared/services/requestUser.service";
     NoPhotoComponent,
     FooterComponent,
   ],
-  providers:[RequestUserService]
+  providers:[]
 })
 export class SystemModule { }

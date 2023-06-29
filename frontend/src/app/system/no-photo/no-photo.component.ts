@@ -13,6 +13,7 @@ export class NoPhotoComponent {
   longStr="";
   isOpen = false;
   adress="";
+  
 
   constructor(private request:RequestUserService, private router:Router){}
 
@@ -29,21 +30,32 @@ export class NoPhotoComponent {
 
    getVal(event:any){
     this.modalT=event.target.value;
-    this.longStr+=this.modalT+';';
+    this.longStr+=this.modalT+', ';
    }
  
    done()
    {
+    let dl=this.longStr.length;
+    let tmp="";
+    for(let i=0;i<dl;i++)
+    {
+      if(i==dl-2)
+      {
+        tmp+='.';
+      }
+      else
+      {
+        tmp+=this.longStr[i];
+      }
+    }
     const adress = this.adress;
-    const class_trash = this.longStr;
-    console.log(class_trash);
+    const class_trash = tmp;
     this.request.createRequest({
       "address":adress,
       "class_trash":class_trash
     })
       .subscribe({
         next: (res) => {
-          console.log(res);
           this.isOpen=true;
         }
       });

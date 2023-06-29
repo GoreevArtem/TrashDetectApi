@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { GlobalConfig } from "src/app/global";
 import { environment } from "src/app/environment";
+import { JWT_NAME } from "./auth.service";
 
 @Injectable()
 export class UserService {
@@ -13,21 +13,25 @@ export class UserService {
 
     getUser()
     {
-        return this.http.get<any>(`${environment.api}${this.path1}`,{headers: new HttpHeaders({'Content-Type':'application/json','Authorization':'Bearer '+ GlobalConfig.t}) });
+        const httpOptions = {headers: new HttpHeaders({'Content-Type':'application/json','Authorization':`Bearer ${ localStorage.getItem(JWT_NAME)}`})}; 
+        return this.http.get<any>(`${environment.api}${this.path1}`,httpOptions);
     }
 
     deleteUser()
     {
-        return this.http.delete<any>(`${environment.api}${this.path2}`,{headers: new HttpHeaders({'Content-Type':'application/json','Authorization':'Bearer '+ GlobalConfig.t}) });
+        const httpOptions = {headers: new HttpHeaders({'Content-Type':'application/json','Authorization':`Bearer ${localStorage.getItem(JWT_NAME)}`})}; 
+        return this.http.delete<any>(`${environment.api}${this.path2}`,httpOptions);
     }
 
     updatePassword(data:any)
     {
-        return this.http.patch(`${environment.api}${this.path3}`,data,{headers: new HttpHeaders({'Content-Type':'application/json','Authorization':'Bearer '+ GlobalConfig.t})});
+        const httpOptions = {headers: new HttpHeaders({'Content-Type':'application/json','Authorization':`Bearer ${localStorage.getItem(JWT_NAME)}`})}; 
+        return this.http.patch(`${environment.api}${this.path3}`,data,httpOptions);
     }
 
     updateLogin(data:any)
     {
-        return this.http.patch(`${environment.api}${this.path4}`,data,{headers: new HttpHeaders({'Content-Type':'application/json','Authorization':'Bearer '+ GlobalConfig.t})});
+        const httpOptions = {headers: new HttpHeaders({'Content-Type':'application/json','Authorization':`Bearer ${localStorage.getItem(JWT_NAME)}`})}; 
+        return this.http.patch(`${environment.api}${this.path4}`,data,httpOptions);
     }
 }

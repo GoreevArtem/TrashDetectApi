@@ -2,6 +2,8 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { User } from "../model/user.model";
 import { environment } from "src/app/environment";
+import { JwtHelperService } from "@auth0/angular-jwt";
+export const JWT_NAME = 'token';
 
 @Injectable()
 export class AuthService {
@@ -10,7 +12,7 @@ export class AuthService {
     private path3='expert/register';
     private path4='expert/authenticate';
 
-    constructor(private http: HttpClient){}
+    constructor(private http: HttpClient, private jwtHelper: JwtHelperService){}
 
     signUpUser(user:User)
     {
@@ -32,4 +34,9 @@ export class AuthService {
         return this.http.post<any>(`${environment.api}${this.path4}`,expert);
     }
    
+    isAuthenticated(): boolean {
+        const token = localStorage.getItem(JWT_NAME);
+        return !this.jwtHelper.isTokenExpired(token);
+    }
+        
 }

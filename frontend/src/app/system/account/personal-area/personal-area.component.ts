@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { GlobalConfig } from 'src/app/global';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import { matchpassword } from 'src/app/auth/matchpassword.validator';
+import { JWT_NAME } from 'src/app/shared/services/auth.service';
 
 @Component({
   selector: 'app-personal-area',
@@ -51,11 +52,9 @@ export class PersonalAreaComponent implements OnInit {
   {
     this.userService.deleteUser()
     .subscribe((response: any) => {
-      this.router.navigate(['/system','about-us']);
-      GlobalConfig.flagMenu1=this.flag1;
-      GlobalConfig.flagMenu2=this.flag2;
-      GlobalConfig.flagMenu3=this.flag2;
-      GlobalConfig.t="";
+    localStorage.removeItem(JWT_NAME);
+    this.router.navigate(['/system', 'about-us']);
+    location.reload();
     });
   }
 
