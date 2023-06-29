@@ -13,7 +13,6 @@ import { ExpertService } from "../shared/services/expert.service";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { SearchExPipe } from './search-ex.pipe';
 import { RequestsExService } from "../shared/services/requestsEx.service";
-import { PhotoService } from "../shared/services/photo.service";
 
 @NgModule({
     imports: [
@@ -32,6 +31,6 @@ import { PhotoService } from "../shared/services/photo.service";
       RequestComponent,
       SearchExPipe,
     ],
-    providers: [YandexMapService,ExpertService,RequestsExService, PhotoService]
+    providers: [YandexMapService,ExpertService,RequestsExService]
 })
 export class ExpertModule { }

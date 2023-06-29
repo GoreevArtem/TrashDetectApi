@@ -37,14 +37,13 @@ export class ResultComponent {
 }
   sentReq()
   {
-    const adress=localStorage.getItem("street");
+    const adress=GlobalConfig.adress;
     const photo_name=this.file;
     this.reqUser.createRequest({
       "address": adress,
       "photo_names": photo_name,
-      "class_trash": ""
     }).subscribe((res)=>{
-      this.router.navigate(['/system','personal-area','applications']);
+      this.router.navigate(['/system','account','applications']);
     })
   }
 }

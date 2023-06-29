@@ -10,6 +10,9 @@ import { GlobalConfig } from 'src/app/global';
   styleUrls: ['./applications.component.css']
 })
 export class ApplicationsComponent implements OnInit {
+  redFlag = false;
+  yellowFlag = false;
+  greenFlag = false;
   mas = [{}];
   res: { [index: number]: any; } = {};
   count = 0;
@@ -19,13 +22,14 @@ export class ApplicationsComponent implements OnInit {
 
   constructor(private reqUser: RequestUserService, private router:Router) { }
   ngOnInit(): void {
-    this.reqUser.getRequests(100)
+    this.reqUser.getRequests(10)
       .subscribe(result => {
         this.mas.push(result);
         this.res = this.mas[1];
         for (let key in this.res) {
           this.count += 1;
         }
+
         for (let key in this.res) {
           this.value = this.res[key];
           let card: Card = new Card();
@@ -51,7 +55,7 @@ export class ApplicationsComponent implements OnInit {
               card.adress = strTmp;
             }
             if (k == 'photo_names' && this.value[k] != null) {
-              card.photo_name=this.value[k];
+              //дописать
             }
             if (k == 'garbage_classes' && this.value[k] != null) {
               card.class_trash=this.value[k];
@@ -69,27 +73,23 @@ export class ApplicationsComponent implements OnInit {
               }
               card.request_date = st;
             }
+
             if (k == 'status') {
+             
               if(this.value[k]=='not view')
               {
-                card.redFlag=true;
-                card.yellowFlag=false;
-                card.greenFlag=false;
                 card.status = 'Не просмотрено';
+                this.redFlag=true;
               }
               if(this.value[k]=='view')
               {
                 card.status = 'Просмотрено';
-                card.redFlag=false;
-                card.yellowFlag=true;
-                card.greenFlag=false;
+                this.yellowFlag=true;
               }
               if(this.value[k]=='clean')
               {
                 card.status = 'Мусор убран';
-                card.redFlag=false;
-                card.yellowFlag=false;
-                card.greenFlag=true;
+                this.greenFlag=true;
               }
             }
           }
@@ -108,7 +108,6 @@ export class ApplicationsComponent implements OnInit {
 
   openCard(id:any){
     GlobalConfig.paramReq=id;
-    localStorage.setItem('paramReq', id);
     this.router.navigate(['/system','account', 'card']);
   }
 }

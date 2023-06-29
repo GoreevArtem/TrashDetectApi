@@ -6,8 +6,6 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import { matchpassword } from 'src/app/auth/matchpassword.validator';
 import { Card } from 'src/app/shared/model/card.model';
 import { RequestsExService } from 'src/app/shared/services/requestsEx.service';
-import { PhotoService } from 'src/app/shared/services/photo.service';
-import { JWT_NAME } from 'src/app/shared/services/auth.service';
 
 @Component({
   selector: 'app-requests',
@@ -34,7 +32,7 @@ export class RequestsComponent implements OnInit
   formPass=false;
 
   constructor(private expertService:ExpertService, private router:Router,
-     private reqEx:RequestsExService, private photoService:PhotoService) { }
+     private reqEx:RequestsExService) { }
   ngOnInit(): void {
     this.expertService.getExpert()
     .subscribe((response:any)=>{
@@ -48,13 +46,14 @@ export class RequestsComponent implements OnInit
       validators:matchpassword
     });
 
-    this.reqEx.getRequests(10)
+    this.reqEx.getRequests(20)
     .subscribe(result => {
       this.mas.push(result);
       this.res = this.mas[1];
       for (let key in this.res) {
         this.count += 1;
       }
+      console.log('all=',this.res);
       for (let key in this.res) {
         this.value = this.res[key];
         let card: Card = new Card();
@@ -105,23 +104,19 @@ export class RequestsComponent implements OnInit
       }
     }
     );
-    
+    console.log(this.arr);
   }
 
   searchText = '';
 
   openCard(id:any){
-    var obj= {
-      idReq:id,
-      type:'number'
-    } 
-    localStorage.setItem('idReq',JSON.stringify(obj));
+    GlobalConfig.paramReq=id;
     this.router.navigate(['/expert','request']);
   }
 
   logout()
   {
-    localStorage.removeItem(JWT_NAME);
+    localStorage.removeItem('t');
     this.router.navigate(['/system', 'about-us']);
     location.reload();
   }
@@ -261,9 +256,7 @@ export class RequestsComponent implements OnInit
           }
           card.adress = strTmp;
         }
-        if (k == 'photo_names' && this.value[k] != null) {
-          //дописать
-        }
+        
         if (k == 'garbage_classes' && this.value[k] != null) {
           card.class_trash=this.value[k];
         }
@@ -331,9 +324,7 @@ export class RequestsComponent implements OnInit
           }
           card.adress = strTmp;
         }
-        if (k == 'photo_names' && this.value[k] != null) {
-          //дописать
-        }
+      
         if (k == 'garbage_classes' && this.value[k] != null) {
           card.class_trash=this.value[k];
         }

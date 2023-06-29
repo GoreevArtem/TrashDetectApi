@@ -3,7 +3,6 @@ import { RequestUserService } from 'src/app/shared/services/requestUser.service'
 import { YandexMapService } from '../../../shared/services/yandex-map_service';
 import { GlobalConfig } from 'src/app/global';
 import { Card } from 'src/app/shared/model/card.model';
-import { PhotoService } from 'src/app/shared/services/photo.service';
 
 @Component({
   selector: 'app-card',
@@ -16,12 +15,13 @@ export class CardComponent {
   dict: { [index: string]: any; } = {};
   card: Card = new Card();
   arr: Card[] = [];
+  redFlag = false;
+  yellowFlag = false;
+  greenFlag = false;
   blockTrash=false;
-  image_src:any;
-  base64data:any;
+ 
 
-  constructor(private yandexMap: YandexMapService, private reqUser: RequestUserService,
-    private photoService:PhotoService) { }
+  constructor(private yandexMap: YandexMapService, private reqUser: RequestUserService) { }
   ngOnInit(): void {
     
     this.reqUser.getRequest(GlobalConfig.paramReq)
@@ -48,12 +48,10 @@ export class CardComponent {
             }
             this.card.adress = strTmp;
             GlobalConfig.adress=this.card.adress;
+            console.log(GlobalConfig.adress);
           }
           if (k == 'photo_names' && this.dict[k] != null) {
-            this.photoService.downloadPhoto(encodeURIComponent(""+this.dict[k]))
-            .subscribe((blob:any)=>{
-              this.card.photo_src=window.URL.createObjectURL(blob);
-            });
+            //дописать
           }
           if (k == 'garbage_classes' && this.dict[k] != null) {
             this.card.class_trash=this.dict[k];
@@ -72,27 +70,20 @@ export class CardComponent {
             }
             this.card.request_date = st;
           }
+
           if (k == 'status') {
-            if(this.dict[k]=='not view')
-            {
-              this.card.redFlag=true;
-              this.card.yellowFlag=false;
-              this.card.greenFlag=false;
+
+            if (this.dict[k] == 'not view') {
               this.card.status = 'Не просмотрено';
+              this.redFlag = true;
             }
-            if(this.dict[k]=='view')
-            {
+            if (this.dict[k] == 'view') {
               this.card.status = 'Просмотрено';
-              this.card.redFlag=false;
-              this.card.yellowFlag=true;
-              this.card.greenFlag=false;
+              this.yellowFlag = true;
             }
-            if(this.dict[k]=='clean')
-            {
+            if (this.dict[k] == 'clean') {
               this.card.status = 'Мусор убран';
-              this.card.redFlag=false;
-              this.card.yellowFlag=false;
-              this.card.greenFlag=true;
+              this.greenFlag = true;
             }
           }
         }

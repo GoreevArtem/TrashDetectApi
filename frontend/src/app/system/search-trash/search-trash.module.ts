@@ -10,7 +10,6 @@ import { HttpClientModule } from "@angular/common/http";
 import { FormsModule } from '@angular/forms';
 import { ResultComponent } from "./result/result.component";
 import { PhotoService } from "src/app/shared/services/photo.service";
-import { RequestUserService } from "src/app/shared/services/requestUser.service";
 
 @NgModule({
   imports: [
@@ -27,6 +26,6 @@ import { RequestUserService } from "src/app/shared/services/requestUser.service"
     LoadFileComponent,
     ResultComponent
   ],
-  providers:[YandexMapService,PhotoService,RequestUserService]
+  providers:[YandexMapService,PhotoService]
 })
 export class SearchTrashModule{ }

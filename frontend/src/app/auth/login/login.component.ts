@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService, JWT_NAME } from 'src/app/shared/services/auth.service';
+import { AuthService } from 'src/app/shared/services/auth.service';
 import { User } from 'src/app/shared/model/user.model';
 import { GlobalConfig } from 'src/app/global';
 
@@ -57,13 +57,16 @@ export class LoginComponent implements OnInit {
 
   onLogin() {
     if (this.form1.valid) {
+      GlobalConfig.t = "";
       const login = this.login.value;
       const passwd = this.password.value;
       const user = new User(login, passwd);
       this.auth.loginUser(user)
         .subscribe({
           next: (res) => {
-            localStorage.setItem(JWT_NAME,res["access_token"]);
+            GlobalConfig.t = res["access_token"];
+            localStorage.setItem('t',res["access_token"]);
+
             this.router.navigate(['/system', 'about-us']);
             GlobalConfig.flagMenu1 = false;
             GlobalConfig.flagMenu2 = true;
@@ -81,6 +84,7 @@ export class LoginComponent implements OnInit {
 
   onLoginEx() {
     if (this.form2.valid) {
+      GlobalConfig.t = "";
       const login = this.loginEx.value;
       const name = this.nameEx.value;
       const passwd = this.passwordEx.value;
@@ -91,7 +95,10 @@ export class LoginComponent implements OnInit {
       })
         .subscribe({
           next: (res) => {
-            localStorage.setItem(JWT_NAME,res["access_token"]);
+            GlobalConfig.t="";
+            GlobalConfig.t = res["access_token"];
+            localStorage.setItem('t',res["access_token"]);
+
             this.router.navigate(['/expert', 'requests']);
           },
           error: (err) => {

@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { environment } from "src/app/environment";
-import { JWT_NAME } from "./auth.service";
 
 @Injectable()
 export class RequestUserService {
@@ -12,21 +11,21 @@ export class RequestUserService {
 
     createRequest(data:any)
     {
-        const httpOptions = {headers: new HttpHeaders({'Content-Type':'application/json','Authorization':`Bearer ${localStorage.getItem(JWT_NAME)}`})}; 
+        const httpOptions = {headers: new HttpHeaders({'Content-Type':'application/json','Authorization':`Bearer ${localStorage.getItem('t')}`})}; 
         return this.http.post<any>(`${environment.api}${this.path1}`,data,httpOptions);
     }
 
     getRequests(limit: number)
     {
         let params = `?limit=${limit}`;
-        const httpOptions = {headers: new HttpHeaders({'Content-Type':'application/json','Authorization':`Bearer ${localStorage.getItem(JWT_NAME)}`})}; 
+        const httpOptions = {headers: new HttpHeaders({'Content-Type':'application/json','Authorization':`Bearer ${localStorage.getItem('t')}`})}; 
         return this.http.get<any>(`${environment.api}${this.path2}`+params,httpOptions);
     }
 
     getRequest(id: number)
     {
         let params = `?req_id=${id}`;
-        const httpOptions = {headers: new HttpHeaders({'Content-Type':'application/json','Authorization':`Bearer ${localStorage.getItem(JWT_NAME)}`})}; 
+        const httpOptions = {headers: new HttpHeaders({'Content-Type':'application/json','Authorization':`Bearer ${localStorage.getItem('t')}`})}; 
         return this.http.get<any>(`${environment.api}${this.path3}`+params,httpOptions);
     }
 

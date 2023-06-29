@@ -14,17 +14,17 @@
     <div class="text-mid" (click)="openCard(c.id)">
        Найден мусор: {{c.adress}}, {{c.request_date}}
     </div>
-    <div id="red" *ngIf="c.redFlag">
+    <div id="red" *ngIf="redFlag">
         <div class="text-status">
            {{c.status}}
         </div>
     </div>
-    <div id="yellow" *ngIf="c.yellowFlag">
+    <div id="yellow" *ngIf="yellowFlag">
         <div class="text-status">
            {{c.status}}
         </div>
     </div>
-    <div id="green" *ngIf="c.greenFlag">
+    <div id="green" *ngIf="greenFlag">
         <div class="text-status">
            {{c.status}}
         </div>

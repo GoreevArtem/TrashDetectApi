@@ -9,7 +9,7 @@
                 <div id="text-second-left-block">klava12@mail.ru</div>
             </div>
             <div id="three-left-block">
-                <div id="text-three-left-block">Выйти из аккаунта</div>
+                <div id="text-three-left-block" (click)="logout()">Выйти из аккаунта</div>
             </div>
         </div>
         <div class="card">
@@ -24,8 +24,14 @@
                 <div class="count-trash" *ngIf="c.cleanFlag" >
                     <div id="text2"> {{c.status}}</div>
                 </div>
-                    <div id="imgTrash">
+                    <div id="imgTrash" *ngIf="!blockTrash">
                         <img class="card-img" [src]="c.photo_src">
+                    </div>
+                    <div  id="blockTrashClass" *ngIf="blockTrash">
+                        <div style="margin:0px 0 10px 1px;">
+                            <div id="nameClass">Класс мусора:</div>
+                            <div id="class">{{c.class_trash}}</div>
+                        </div>
                     </div>
                     <div id="block3">
                         <div class="button1">

@@ -17,16 +17,13 @@ export class RequestComponent {
   dict: { [index: string]: any; } = {};
   card: Card = new Card();
   arr: Card[] = [];
-  id:number=0;
-  tmp:any;
+  blockTrash=false;
+
   constructor(private yandexMap: YandexMapService, private router:Router,
     private reqEx:RequestsExService, private photoService:PhotoService) { }
   ngOnInit(): void {
   this.yandexMap.initMap(56.323163, 43.866262);
-  let store = localStorage.getItem('idReq')
-  let obj = store !== null ? JSON.parse(store) : null;
-  this.id=obj.idReq;
-  this.reqEx.getRequest(this.id)
+  this.reqEx.getRequest(GlobalConfig.paramReq)
   .subscribe(res => {
     this.dict = res;
     for (let k in this.dict) {
@@ -52,13 +49,14 @@ export class RequestComponent {
         GlobalConfig.adress=this.card.adress;
       }
       if (k == 'photo_names' && this.dict[k] != null) {
-        this.photoService.downloadPhotoEx(this.id)
+        this.photoService.downloadPhotoEx(GlobalConfig.paramReq)
         .subscribe((blob:any)=>{
           this.card.photo_src=window.URL.createObjectURL(blob);
         });
       }
       if (k == 'garbage_classes' && this.dict[k] != null) {
         this.card.class_trash=this.dict[k];
+        this.blockTrash=true;
       }
       if (k == 'request_date') {
         let tmp: string = this.dict[k];
@@ -89,7 +87,7 @@ export class RequestComponent {
           this.card.cleanFlag=false;
         }
         if (this.dict[k] == 'clean') {
-          this.card.status = 'Мусор больше нет по этому адресу';
+          this.card.status = 'Мусора больше нет по этому адресу';
           this.card.notViewFlag = false;
           this.card.viewFlag = false;
           this.card.cleanFlag=true;
@@ -97,7 +95,7 @@ export class RequestComponent {
       }
     }
     this.arr.push(this.card);
-    console.log('ARRR=',this.arr);
+    
   });
   
   }
@@ -124,6 +122,13 @@ export class RequestComponent {
   noTrash()
   {
     this.router.navigate(['expert','requests']);
+  }
+
+  logout()
+  {
+    localStorage.removeItem('t');
+    this.router.navigate(['/system', 'about-us']);
+    location.reload();
   }
 
 }
