@@ -71,7 +71,7 @@
 .card
 {
     width:  1127px;
-    height: 573px;
+    height: 500px;
     background: #C7F3C3;
     border-radius: 10px;
     margin:0 213px 0 60px;
@@ -113,15 +113,14 @@
 
 .count-trash
 {
-    width: 361px;
+    width: 343px;
     height: 40px;
     background: #7FB07C;
     border-radius: 10px;
-    margin: 6px 500px 0 20px;
+    margin: 27px 500px 0 20px;
     font-family: 'Freeride';
     color: #FFFFFF;
     font-size: 24px;
-    position: absolute;
 }
 
 #text2
@@ -134,7 +133,6 @@
 {
     width: 489.58px;
     height: 260px;
-    border-radius: 10px;
 }
 
 .results-map {
@@ -149,7 +147,7 @@
 {
     display: flex;
     flex-direction: row;
-    margin:300px 20px 0 20px;
+    margin:53px 20px 0 20px;
     width: 1087px;
     position:absolute;
 }
@@ -307,34 +305,4 @@ textarea:focus{
 {
     margin-left: 20px;
     margin-top: 20px;
-}
-
-#blockTrashClass
-{
-    border-radius: 10px;
-    height: auto;
-    width: 481px;
-    margin-left:20px;
-}
-
-#nameClass
-{
-    color: black;
-    font-family: 'Freeride';
-    font-size: 24px;
-    font-weight: 600;
-    border-bottom: 2px solid black;
-    padding-bottom: 3px;
-    margin-bottom: 10px;
-    width: 131px;
-    padding-top: 11px;
-}
-
-#class
-{
-    color: black;
-    font-family: 'Freeride';
-    font-size: 24px;
-    padding-bottom: 10px;
-    width: 453px;
 }

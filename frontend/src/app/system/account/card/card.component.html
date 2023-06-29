@@ -5,30 +5,30 @@
                 <div id="text1">{{c.id}}</div>
             </div>
             <div class="text-mid"> Найден мусор: {{c.adress}}, {{c.request_date}}</div>
-            <div id="red" *ngIf="c.redFlag">
+            <div id="red" *ngIf="redFlag">
                 <div class="text-status">
                    {{c.status}}
                 </div>
             </div>
-            <div id="yellow" *ngIf="c.yellowFlag">
+            <div id="yellow" *ngIf="yellowFlag">
                 <div class="text-status">
                    {{c.status}}
                 </div>
             </div>
-            <div id="green" *ngIf="c.greenFlag">
+            <div id="green" *ngIf="greenFlag">
                 <div class="text-status">
                    {{c.status}}
                 </div>
             </div>
         </div>
         
-         <div *ngIf="!blockTrash">
-                <img class="card-img" [src]="c.photo_src">
-        </div>
+         <!-- <div *ngIf="!blockTrash">
+                <img class="card-img" src="../../../../assets/image/Group 48.png">
+            </div> -->
         
-            <div  id="blockTrashClass" *ngIf="blockTrash">
+            <div  id="blockTrashClass">
                 <div style="margin:11px 0 10px 14px;">
-                    <div id="nameClass">Класс мусора:</div>
+                    <div id="nameClass">Класс мусора</div>
                     <div id="class">{{c.class_trash}}</div>
                 </div>
             </div>
@@ -58,3 +58,51 @@
 </div>
 
 </div> 
+<!-- <div class="card">
+    <div id="block1">
+        <div class="num">
+            <div id="text1">1</div>
+        </div>
+        <div class="text-mid">Найден пластик на улице Чадаеева, 56 в 17:00</div>
+        <div id="red">
+            <div class="text-status">
+                Не просмотрено
+            </div>
+        </div>
+    </div>
+    
+    <div class="count-trash">
+        <div id="text2">Найденное количество мусора: 10</div>
+    </div>
+    
+    <div id="block2">
+        <div>
+            <img class="card-img" src="../../../../assets/image/Group 48.png">
+        </div>
+        <div id="map" class="results-map"></div>
+    </div>
+    
+    <div id="block3">
+        <div class="button1">
+            <div id="b-text1" (click)="open()">Сообщить об ошибке</div>
+        </div>
+        <div class="button2" routerLinkActive="active">
+            <a id="b-text2" [routerLink]="['/system','account', 'applications']">Ок</a>
+        </div>
+    </div>
+    
+    <div class="cont">
+        <div class="button-res">
+         <div *ngIf="isOpen" class="modal">
+                <div class="modal-content">
+                    <span span (click)="open()" class="close">&times;</span>
+                    <div class="classification-title">Сообщение об ошибке</div>
+                    <textarea class="textarea-report"></textarea>
+                    <div class="report-btn">Отправить</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    </div> -->
+    

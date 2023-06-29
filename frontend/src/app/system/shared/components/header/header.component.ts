@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { AuthService,JWT_NAME } from 'src/app/shared/services/auth.service';
+import { Component } from '@angular/core';
+import { AuthService } from 'src/app/shared/services/auth.service';
 import { Router } from '@angular/router';
 import { GlobalConfig } from 'src/app/global';
 
@@ -10,27 +10,21 @@ import { GlobalConfig } from 'src/app/global';
 })
 
 
-export class HeaderComponent implements OnInit{
+export class HeaderComponent {
   isOpen = false;
-  id: any;
-  flag1 = true;
-  flag2 = false;
-  flag3 = false;
   open() {
     this.isOpen = !this.isOpen;
   }
-
+  
+  flag1=GlobalConfig.flagMenu1;
+  flag2=GlobalConfig.flagMenu2;
+  flag3=GlobalConfig.flagMenu3;
+  
   constructor(
     private router: Router,
     private auth: AuthService
   ) { }
-  ngOnInit(): void {
-    this.flag1 = !this.auth.isAuthenticated();
-    this.flag2 = this.auth.isAuthenticated();
-    this.flag3 = this.auth.isAuthenticated();
-    }
-
-
+  id: any;
   drop(param: any) {
     this.id = param;
   }
@@ -44,9 +38,8 @@ export class HeaderComponent implements OnInit{
 
   logout()
   {
-  localStorage.removeItem(JWT_NAME);
-  this.router.navigate(['/system', 'about-us']);
-  location.reload();
+    GlobalConfig.t="";
+    this.router.navigate(['/system', 'about-us']);
   }
     
   }

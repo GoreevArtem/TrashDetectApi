@@ -11,6 +11,7 @@ import { NoPhotoComponent } from './no-photo/no-photo.component';
 import { FormsModule } from '@angular/forms';
 import { FooterComponent } from './shared/components/footer/footer.component';
 import { AccountModule } from "./account/account.module";
+import { RequestUserService } from "../shared/services/requestUser.service";
 
 @NgModule({
   imports: [
@@ -30,6 +31,6 @@ import { AccountModule } from "./account/account.module";
     NoPhotoComponent,
     FooterComponent,
   ],
-  providers:[]
+  providers:[RequestUserService]
 })
 export class SystemModule { }

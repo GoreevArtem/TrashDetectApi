@@ -4,8 +4,6 @@ import { RequestsExService } from 'src/app/shared/services/requestsEx.service';
 import { YandexMapService } from 'src/app/shared/services/yandex-map_service';
 import { Card } from 'src/app/shared/model/card.model';
 import { GlobalConfig } from 'src/app/global';
-import { PhotoService } from 'src/app/shared/services/photo.service';
-import { JWT_NAME } from 'src/app/shared/services/auth.service';
 
 @Component({
   selector: 'app-request',
@@ -18,10 +16,10 @@ export class RequestComponent {
   dict: { [index: string]: any; } = {};
   card: Card = new Card();
   arr: Card[] = [];
-  blockTrash=false;
+  notViewFlag = false;
+  viewFlag = false;
 
-  constructor(private yandexMap: YandexMapService, private router:Router,
-    private reqEx:RequestsExService, private photoService:PhotoService) { }
+  constructor(private yandexMap: YandexMapService, private router:Router, private reqEx:RequestsExService) { }
   ngOnInit(): void {
   this.yandexMap.initMap(56.323163, 43.866262);
   this.reqEx.getRequest(GlobalConfig.paramReq)
@@ -50,14 +48,7 @@ export class RequestComponent {
         GlobalConfig.adress=this.card.adress;
       }
       if (k == 'photo_names' && this.dict[k] != null) {
-        this.photoService.downloadPhotoEx(GlobalConfig.paramReq)
-        .subscribe((blob:any)=>{
-          this.card.photo_src=window.URL.createObjectURL(blob);
-        });
-      }
-      if (k == 'garbage_classes' && this.dict[k] != null) {
-        this.card.class_trash=this.dict[k];
-        this.blockTrash=true;
+        //дописать
       }
       if (k == 'request_date') {
         let tmp: string = this.dict[k];
@@ -77,28 +68,16 @@ export class RequestComponent {
 
         if (this.dict[k] == 'not view') {
           this.card.status = 'Просмотрено';
-          this.card.notViewFlag = true;
-          this.card.viewFlag = false;
-          this.card.cleanFlag=false;
+          this.notViewFlag = true;
         }
         if (this.dict[k] == 'view') {
           this.card.status = 'Мусор убран';
-          this.card.notViewFlag = false;
-          this.card.viewFlag = true;
-          this.card.cleanFlag=false;
-        }
-        if (this.dict[k] == 'clean') {
-          this.card.status = 'Мусора больше нет по этому адресу';
-          this.card.notViewFlag = false;
-          this.card.viewFlag = false;
-          this.card.cleanFlag=true;
+          this.viewFlag = true;
         }
       }
     }
     this.arr.push(this.card);
-    
   });
-  
   }
 
   open() {
@@ -109,27 +88,7 @@ export class RequestComponent {
   {
     this.reqEx.setViewStatus(id)
     .subscribe(res=>{
-     this.router.navigate(['expert','requests']);
+      console.log(res);
     })
   }
-  clean(id:any)
-  {
-    this.reqEx.setCleanStatus(id)
-    .subscribe(res=>{
-     this.router.navigate(['expert','requests']);
-    })
-  }
-
-  noTrash()
-  {
-    this.router.navigate(['expert','requests']);
-  }
-
-  logout()
-  {
-    localStorage.removeItem(JWT_NAME);
-    this.router.navigate(['/system', 'about-us']);
-    location.reload();
-  }
-
 }

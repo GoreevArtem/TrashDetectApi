@@ -10,6 +10,9 @@ import { GlobalConfig } from 'src/app/global';
   styleUrls: ['./applications.component.css']
 })
 export class ApplicationsComponent implements OnInit {
+  redFlag = false;
+  yellowFlag = false;
+  greenFlag = false;
   mas = [{}];
   res: { [index: number]: any; } = {};
   count = 0;
@@ -26,7 +29,7 @@ export class ApplicationsComponent implements OnInit {
         for (let key in this.res) {
           this.count += 1;
         }
-        
+
         for (let key in this.res) {
           this.value = this.res[key];
           let card: Card = new Card();
@@ -37,7 +40,6 @@ export class ApplicationsComponent implements OnInit {
 
             let strTmp = '';
             if (k == 'address') {
-              console.log(this.value[k]);
               let dict = this.value[k];
               for (let i in dict) {
                 if (i == 'address_city') {
@@ -53,7 +55,7 @@ export class ApplicationsComponent implements OnInit {
               card.adress = strTmp;
             }
             if (k == 'photo_names' && this.value[k] != null) {
-              card.photo_name=this.value[k];
+              //дописать
             }
             if (k == 'garbage_classes' && this.value[k] != null) {
               card.class_trash=this.value[k];
@@ -71,27 +73,23 @@ export class ApplicationsComponent implements OnInit {
               }
               card.request_date = st;
             }
+
             if (k == 'status') {
+             
               if(this.value[k]=='not view')
               {
-                card.redFlag=true;
-                card.yellowFlag=false;
-                card.greenFlag=false;
                 card.status = 'Не просмотрено';
+                this.redFlag=true;
               }
               if(this.value[k]=='view')
               {
                 card.status = 'Просмотрено';
-                card.redFlag=false;
-                card.yellowFlag=true;
-                card.greenFlag=false;
+                this.yellowFlag=true;
               }
               if(this.value[k]=='clean')
               {
                 card.status = 'Мусор убран';
-                card.redFlag=false;
-                card.yellowFlag=false;
-                card.greenFlag=true;
+                this.greenFlag=true;
               }
             }
           }
