@@ -132,12 +132,12 @@ export class RequestsComponent implements OnInit
       "password":passwd
     })
     .subscribe({
-      next:(res)=>{
+      next:()=>{
         this.form1.reset();
         GlobalConfig.t="";
         this.router.navigate(['login']);
       },
-      error:(err)=>{
+      error:(err:any)=>{
         this.resMessage=err["error"]["detail"];
        if(this.resMessage==this.trueMessageP)
        {

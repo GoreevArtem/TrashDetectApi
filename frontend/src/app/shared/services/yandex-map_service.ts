@@ -1,44 +1,40 @@
 import { Injectable } from '@angular/core';
+import { GlobalConfig } from 'src/app/global';
+
 
 declare var ymaps:any;
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
+
 export class YandexMapService {
   map: any;
   myPlacemark: any;
  
-
-  
   initMap(lat:any, long: any) {
+   
     ymaps.ready().done(() => this.createMap(lat, long));
   }
-  reloadPage() {
-    // The last "domLoading" Time //
-    var currentDocumentTimestamp =
-    new Date(performance.timing.domLoading).getTime();
-    // Current Time //
-    var now = Date.now();
-    // Ten Seconds //
-    var tenSec = 10 * 1000;
-    // Plus Ten Seconds //
-    var plusTenSec = currentDocumentTimestamp + tenSec;
-    if (now > plusTenSec) {
-    location.reload();
-    }
-  }
-
+  
   private createMap(lat: any, long: any): void {
     this.map = new ymaps.Map('map', {
       center: [lat, long],
       zoom: 10,
       controls: ['zoomControl']
     });
-      var sentAdress=localStorage.getItem('street');
+      var sentAdress;
+      if(GlobalConfig.flagMap==false)
+      {
+        sentAdress=GlobalConfig.adress;
+      }
+      else
+      {
+        sentAdress=localStorage.getItem('street');
+      }
+      
       var res=ymaps.geocode(sentAdress);
       var firstGeoObject = res.then(
           function(ress:any) {
+          
           var coordinate=[];
           coordinate=ress.geoObjects.get(0).geometry.getCoordinates();
           localStorage.setItem('coor', String(coordinate));
@@ -46,13 +42,10 @@ export class YandexMapService {
         );
       
       let input=localStorage.getItem('coor');
-      let tmp=input?.split(',').map(Number)
+      let tmp=input?.split(',').map(Number);
       let mark = this.createPlacemark(tmp);
       this.map.geoObjects.add(mark);
-     
       this.getAddress(mark,tmp);
-     
-     
   }
 
   // Создание метки.
@@ -82,6 +75,7 @@ export class YandexMapService {
           // В качестве контента балуна задаем строку с адресом объекта.
           balloonContent: firstGeoObject.getAddressLine()
         });
+        GlobalConfig.adress=firstGeoObject.getAddressLine();
     });
   }
 }

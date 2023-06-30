@@ -1,7 +1,8 @@
-import {EnvironmentPlugin} from 'webpack'
+import { EnvironmentPlugin } from 'webpack';
+require('dotenv').config()
 
 module.exports={
     plugins:[
-        new EnvironmentPlugin(['API'])
+        new EnvironmentPlugin(["API"])
     ]
 }

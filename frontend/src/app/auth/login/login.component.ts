@@ -63,7 +63,7 @@ export class LoginComponent implements OnInit {
       const user = new User(login, passwd);
       this.auth.loginUser(user)
         .subscribe({
-          next: (res) => {
+          next: (res:any) => {
             GlobalConfig.t = res["access_token"];
             localStorage.setItem('t',res["access_token"]);
 
@@ -72,7 +72,7 @@ export class LoginComponent implements OnInit {
             GlobalConfig.flagMenu2 = true;
             GlobalConfig.flagMenu3 = true;
           },
-          error: (err) => {
+          error: (err:any) => {
             this.resMessage = err["error"]["detail"];
             if (this.resMessage == this.trueMessage) {
               this.isOpen = true;
@@ -94,14 +94,14 @@ export class LoginComponent implements OnInit {
         "password": passwd,
       })
         .subscribe({
-          next: (res) => {
+          next: (res:any) => {
             GlobalConfig.t="";
             GlobalConfig.t = res["access_token"];
             localStorage.setItem('t',res["access_token"]);
 
             this.router.navigate(['/expert', 'requests']);
           },
-          error: (err) => {
+          error: (err:any) => {
             this.resMessage = err["error"]["detail"];
             if (this.resMessage == this.trueMessage) {
               this.isOpen = true;

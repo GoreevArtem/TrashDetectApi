@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { GlobalConfig } from "src/app/global";
 import { environment } from "src/app/environment";
 
 @Injectable()

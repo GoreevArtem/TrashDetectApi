@@ -24,7 +24,7 @@ export class RequestComponent {
   ngOnInit(): void {
   this.yandexMap.initMap(56.323163, 43.866262);
   this.reqEx.getRequest(GlobalConfig.paramReq)
-  .subscribe(res => {
+  .subscribe((res:any) => {
     this.dict = res;
     for (let k in this.dict) {
       if (k == 'id') {
@@ -107,14 +107,14 @@ export class RequestComponent {
   view(id:any)
   {
     this.reqEx.setViewStatus(id)
-    .subscribe(res=>{
+    .subscribe(()=>{
      this.router.navigate(['expert','requests']);
     })
   }
   clean(id:any)
   {
     this.reqEx.setCleanStatus(id)
-    .subscribe(res=>{
+    .subscribe(()=>{
      this.router.navigate(['expert','requests']);
     })
   }
