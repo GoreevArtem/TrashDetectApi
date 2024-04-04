@@ -5,8 +5,7 @@ Api для детектирования мусора на изображении
 
 Linux / Windows
 
-python 3.9 и выше
-
+предварительно нужно установить докер и make на рабочуюю машину
 ```
 git clone https://github.com/GoreevArtem/TrashDetectApi
 cd TrashDetectApi/
