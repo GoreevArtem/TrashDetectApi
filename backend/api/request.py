@@ -1,4 +1,4 @@
-from typing import Optional, Dict, List
+from typing import Optional, Dict
 
 from fastapi import APIRouter, status, Depends, UploadFile, Query
 from fastapi.encoders import jsonable_encoder
@@ -8,6 +8,7 @@ from redis.commands.json.path import Path
 from database.redis import redis_startup
 from schemas import schemas
 from services.request import RequestService
+from utils.JWT import JWTBearer
 
 router = APIRouter(
     prefix='/request',
@@ -18,7 +19,8 @@ router = APIRouter(
 @router.post(
     '/create_request',
     status_code=status.HTTP_201_CREATED,
-    response_model=schemas.CreateRequest
+    response_model=schemas.CreateRequest,
+    dependencies=[Depends(JWTBearer())]
 )
 async def create_request(
         new_request: schemas.CreateRequest,
@@ -30,15 +32,34 @@ async def create_request(
 @router.get(
     '/get_request',
     status_code=status.HTTP_200_OK,
-    response_model=Optional[Dict[str, schemas.Request]]
+    response_model=Optional[schemas.Request],
+    dependencies=[Depends(JWTBearer())]
 )
 async def get_request(
+        req_id: int = Query(ge=0),
+        request_service: RequestService = Depends()
+):
+    key = str(request_service.user_id) + "_get_request_" + str(req_id)
+    if redis_startup.json().get(key) is None:
+        data = request_service.get_request(req_id)
+        redis_startup.json().set(key, Path.root_path(), jsonable_encoder(data))
+        redis_startup.expire(key, 30)
+    return redis_startup.json().get(key)
+
+
+@router.get(
+    '/get_all_requests',
+    status_code=status.HTTP_200_OK,
+    response_model=Optional[Dict[str, schemas.Request]],
+    dependencies=[Depends(JWTBearer())]
+)
+async def get_all_requests(
         limit: int = Query(default=10, ge=0),
         request_service: RequestService = Depends()
 ):
-    key = str(request_service.user_id) + "_get_request_" + str(limit)
+    key = str(request_service.user_id) + "_get_all_request_" + str(limit)
     if redis_startup.json().get(key) is None:
-        data = request_service.get_request(limit)
+        data = request_service.get_all_requests(limit)
         redis_startup.json().set(key, Path.root_path(), jsonable_encoder(data))
         redis_startup.expire(key, 30)
     return redis_startup.json().get(key)
@@ -47,16 +68,20 @@ async def get_request(
 @router.post(
     "/detection",
     status_code=status.HTTP_200_OK,
-    response_model=Optional[Dict[str, schemas.FindClassTrash]]
+    response_model=Optional[schemas.FindClassTrash],
+    dependencies=[Depends(JWTBearer())],
 )
 async def detect_trash_on_photo(
-        files: List[UploadFile],
+        file: UploadFile,
         request_service: RequestService = Depends()):
-    data = [schemas.FindClassTrash(**await request_service.detect_trash_on_photo(file)) for file in files]
-    return dict(zip(range(1, len(data) + 1), data))
+    return await request_service.detect_trash_on_photo(file)
 
 
-@router.get("/filepath", response_class=FileResponse)
+@router.get(
+    "/filepath",
+    response_class=FileResponse,
+    dependencies=[Depends(JWTBearer())],
+)
 def download_photo(
         upload_name: str,
         request_service: RequestService = Depends()):

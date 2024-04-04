@@ -1,4 +1,5 @@
 import functools
+import os
 
 from fastapi import status, Depends, HTTPException
 from sqlalchemy import or_, and_
@@ -79,7 +80,7 @@ class ExpertService(UserService):
     def __get_me(
             self
     ):
-        expert = self.session.query(models.Expert).\
+        expert = self.session.query(models.Expert). \
             options(joinedload(models.Expert.region_operator)).get(self.user_id)
         if expert is not None:
             return expert
@@ -113,8 +114,8 @@ class ExpertService(UserService):
             self.session.refresh(user)
 
     def get_all_requests(self, limit: int = 10):
-        user = self.__get_me()
         try:
+            user = self.__get_me()
             all_requests = self.session.query(models.Request).options(
                 joinedload(models.Request.address),
                 joinedload(models.Request.expert),
@@ -142,18 +143,33 @@ class ExpertService(UserService):
         except:
             return None
 
-    def set_view_status(self, req_id: int):
+    def get_photo(self, req_id: int):
+        user = self.__get_me()
+        request = self.session.query(models.Request).filter(and_(models.Request.id == req_id,
+                                                                 models.Request.expert_id == user.id)).first()
+        if request is not None and request.photo_names is not None:
+            os.chdir(os.path.join("..", "source_users_photo"))
+            path = os.path.join("..", "source_users_photo", str(request.user_id), str(request.photo_names))
+            if os.path.exists(path):
+                return path
+        else:
+            raise HTTPException(status_code=404, detail="Photo not found")
+
+    def __set_status(self, req_id: int, status: str):
         user = self.__get_me()
         data = self.session.query(models.Request).filter(and_(models.Request.id == req_id,
                                                               models.Request.expert_id == user.id)).first()
         if data is not None:
-            if data.status != 'view':
-                data.status = 'view'
+            if data.status != status:
+                data.status = status
                 self.session.commit()
                 self.session.refresh(data)
             return data
         else:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail='Not found'
-            )
+            raise HTTPException(status_code=404, detail="Not found")
+
+    def set_status_view(self, req_id: int):
+        return self.__set_status(req_id, "view")
+
+    def set_status_clean(self, req_id: int):
+        return self.__set_status(req_id, "clean")

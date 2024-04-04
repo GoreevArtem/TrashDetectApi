@@ -131,7 +131,6 @@ dmypy.json
 .idea/
 
 *.sql
-*.html
 
 /source_users_photo/
 /best.pt

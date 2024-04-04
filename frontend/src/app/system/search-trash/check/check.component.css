@@ -1,0 +1,106 @@
+.stepper{
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: center;
+    margin-top: 100px;
+}
+.stepper-step{
+    width: 63px;
+    height: 63px;
+    border: 1.5px solid #61895E;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Freeride';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 30px;
+    line-height: 0px;
+    color: #000000;
+    cursor: pointer;
+}
+.stepper-line{
+    width: 10%;
+    height: 0px;
+    border: 1px solid #61895E;
+}
+.info{
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.info-title{
+    background: #C7F3C3;
+    border-radius: 8px;
+    width:562px;
+    font-family: 'Freeride';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 26px;
+    line-height: 32px;
+    color: #000000;
+    padding: 8px 19px;
+    margin-top: 36px;
+}
+.info-files{
+    display: flex;
+    gap: 28px;
+    font-family: 'Freeride';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 26px;
+    line-height: 32px;
+    color: #000000;
+    margin-top: 16px;
+    background: #EAF6E9;
+    height: auto;
+    border-radius: 8px;
+    border: none;
+    width: 581px;
+    padding: 8px 0 8px 19px;
+}
+
+.info-input{
+    padding-left: 19px;
+    background: #EAF6E9;
+    border-radius: 8px;
+    border: none;
+    font-family: 'Freeride';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 26px;
+    line-height: 32px;
+    color: black;
+    margin-top: 24px;
+    outline:none;
+    width: 581px;
+    height: 48px;
+    margin-bottom: 37px;
+}
+
+.info-load{
+    font-family: 'Freeride';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 28px;
+    line-height: 25px;
+    color: #FFFFFF;
+    width: 160px;
+    height: 23px;
+    background: #7FB07C;
+    border-radius: 10px;
+    text-align: center;
+    padding: 12px 0;
+    border: none;
+    margin: 40px 0 70px 0;
+}
+
+input:focus {
+    outline: 2px solid #7FB07C
+}

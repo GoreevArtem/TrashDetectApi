@@ -1,0 +1,27 @@
+<div class="stepper">
+    <div style="border: 3px solid #61895E;" class="stepper-step">1</div>
+    <div class="stepper-line"></div>
+    <div class="stepper-step">2</div>
+    <div class="stepper-line"></div>
+    <div class="stepper-step">3</div>
+</div>
+
+<div id="block1">
+    <div id="block-photo">
+        <label class="load-photo-btn" style="margin-right: 80px;" (change)=" getFileDetails($event)">
+            Выбрать фото
+            <input style="visibility: hidden;" type="file" id="file">
+        </label>
+        <div id="loadDone" *ngIf="imageUploaded ">Загружено!</div>
+    </div>
+    <div>
+        <img class="img-load" src="../../../../assets/image/image 80.png">
+    </div>
+    <a [routerLink]="['/system', 'no-photo']" routerLinkActive="active" class="load-photo-btn" id="link">У меня нет фото</a>
+</div>
+
+<div id="block2" *ngIf="next">
+    <div routerLinkActive="active" class="next">
+        <a [routerLink]="['/system', 'search-trash','check']">Далее</a>
+    </div>
+</div>

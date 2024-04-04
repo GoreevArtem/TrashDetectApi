@@ -1,6 +1,6 @@
 from datetime import datetime
 from enum import Enum
-from typing import Optional, List
+from typing import Optional, List, Dict
 
 from pydantic import BaseModel, EmailStr
 
@@ -45,8 +45,12 @@ class TokenSchema(BaseModel):
     token_type: str = 'bearer'
 
 
+class MessageSent(OrmMode):
+    message: str
+
+
 class CreateRequest(OrmMode):
-    address: str
+    address: Optional[str]
     photo_names: Optional[str]
     class_trash: Optional[str]
 
@@ -69,7 +73,7 @@ class Request(OrmMode):
     id: int
     address: Address
     photo_names: Optional[str]
-    class_trash: Optional[str]
+    garbage_classes: Optional[str]
     request_date: datetime
     region_operator: Optional[str]
     expert: Optional[str]
@@ -78,7 +82,7 @@ class Request(OrmMode):
 
 class FindClassTrash(OrmMode):
     name_photo: str
-    trash_classes: str
+    trash_classes: Optional[Dict[str, int]]
 
 
 class ExpertBaseSchema(OrmMode):
@@ -114,5 +118,6 @@ class RequestExpert(RequestExpertBase):
     region_operator: str
     expert: str
     request_date: datetime
-    photo_names: str
+    garbage_classes: Optional[str]
+    photo_names: Optional[str]
     address: Address

@@ -64,12 +64,7 @@ class Request(Base):
         passive_deletes=True,
     )
 
-    garbage_classes = relationship(
-        "GarbageClass",
-        back_populates="request",
-        cascade='save-update, merge, delete',
-        passive_deletes=True,
-    )
+    garbage_classes = Column(String)
     expert_id = Column(UUID(as_uuid=True), ForeignKey("expert.id", ondelete='CASCADE'))
     expert = relationship(
         "Expert",
@@ -165,13 +160,3 @@ class Address(Base):
         cascade = 'save-update, merge, delete',
         passive_deletes = True,
     )
-
-
-class GarbageClass(Base):
-    __tablename__ = 'garbage_class'
-
-    id = Column(Integer, primary_key=True, index=True)
-    class_trash = Column(String)
-
-    request_id = Column(Integer, ForeignKey("request.id"))
-    request = relationship("Request", back_populates="garbage_classes")

@@ -1,0 +1,38 @@
+<div class="header">
+    <div class="header-left">
+        <a [routerLink]="['/system', 'about-us']" class="header-title">EcoScanNN</a>
+        <div class="header-leftline"></div>
+    </div>
+    <div routerLinkActive="active" class="header-mid">
+
+        <a [routerLink]="['/system', 'about-us']" class="header-mid__title">
+            О нас
+        </a>
+        <a [routerLink]="['/system', 'instruction']" class="header-mid__title" *ngIf="flag3">
+            Поиск мусора
+        </a>
+        <a [routerLink]="['/system', 'contacts']" class="header-mid__title">
+            Контакты
+        </a>
+    </div>
+
+    <div class="header-right">
+        <div class="header-leftline"></div>
+        <div id="enter" *ngIf="flag1">
+            <a routerLink="/login" routerLinkActive="active" class="header-mid__title">Войти</a>
+        </div>
+        <div class="bl" *ngIf="flag2">
+            <img class="img1" src="../../../../../assets/image/image 29.svg">
+            <img class="img2"src="../../../../../assets/image/image 67.svg" (click)="drop('profile')">
+        </div>
+       
+        <div *ngIf="id ==='profile'" class="dropDown">
+           <div routerLinkActive="active" class="text1" (click)="closeDrop('profile')">
+           <a [routerLink]="['/system','account', 'personal-area']" style="cursor: pointer; color: #000000;" >Профиль</a> 
+           </div>
+           <div class="text2" (click)="logout()" (click)="closeDrop('profile')">
+            Выйти
+           </div>
+        </div>
+    </div>
+</div>

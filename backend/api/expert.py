@@ -2,6 +2,7 @@ from typing import Dict, Optional
 
 from fastapi import APIRouter, status, Depends, HTTPException, Query
 from fastapi.encoders import jsonable_encoder
+from fastapi.responses import FileResponse
 from redis.commands.json.path import Path
 
 from database.redis import redis_startup
@@ -39,9 +40,6 @@ async def authenticate_user(
     return auth_service.authenticate_expert(payload)
 
 
-##
-# TODO UPDATE SCHEMAS
-##
 @router.get(
     '/me',
     status_code=status.HTTP_200_OK,
@@ -102,6 +100,15 @@ def get_request(req_id: int = Query(ge=0), expert_service: ExpertService = Depen
     return redis_startup.json().get(key)
 
 
+@router.get(
+    '/get_photo',
+    response_class=FileResponse,
+    tags=['expert requests']
+)
+def download_photo(req_id: int = Query(ge=0), expert_service: ExpertService = Depends()):
+    return expert_service.get_photo(req_id)
+
+
 @router.put(
     '/set_view_status',
     status_code=status.HTTP_200_OK,
@@ -109,8 +116,14 @@ def get_request(req_id: int = Query(ge=0), expert_service: ExpertService = Depen
     tags=['expert requests'],
 )
 def set_view_status(req_id: int = Query(ge=0), expert_service: ExpertService = Depends()):
-    return expert_service.set_view_status(req_id)
+    return expert_service.set_status_view(req_id)
 
 
-def change_request():
-    ...
+@router.put(
+    '/set_clean_status',
+    status_code=status.HTTP_200_OK,
+    response_model=Optional[schemas.RequestExpertBase],
+    tags=['expert requests'],
+)
+def set_clean_status(req_id: int = Query(ge=0), expert_service: ExpertService = Depends()):
+    return expert_service.set_status_clean(req_id)

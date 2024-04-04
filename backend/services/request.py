@@ -4,15 +4,15 @@ from typing import Optional, Dict
 
 import aiofiles as aiofiles
 from fastapi import Depends, HTTPException, status, UploadFile, File
-from fastapi.responses import FileResponse
-from sqlalchemy import func
+from sqlalchemy import func, and_
 from sqlalchemy.orm import joinedload
 
-import utils.create_sourse
+import utils.create_source
 from database import models
 from database.db import Session, get_session
 from schemas import schemas
 from utils.JWT import JWTBearer
+from utils.detect import GarbageDetection
 from utils.get_address import get_addr
 
 
@@ -36,10 +36,11 @@ class RequestService:
         address_request = models.Address()
 
         request.photo_names = new_request.photo_names
+        request.garbage_classes = new_request.class_trash
 
         user.requests.extend([request])
-
-        address_list = get_addr(new_request.address)
+        new_request = new_request.address.split(",")
+        address_list = get_addr(", ".join([new_request[0], new_request[-2], new_request[-1]]))
         if address_list is not None:
             get_id = self.session.query(models.Address).distinct().filter(
                 models.Address.address_city == address_list[-4],
@@ -99,7 +100,24 @@ class RequestService:
                 detail='Address entered incorrectly'
             )
 
-    def get_request(self, limit: int = 10) -> Optional[Dict[str, schemas.Request]]:
+    def get_request(self, req_id: int) -> Optional[schemas.Request]:
+        try:
+            data = self.session.query(models.Request) \
+                .options(
+                joinedload(models.Request.address),
+                joinedload(models.Request.region_operator),
+                joinedload(models.Request.expert)
+            ) \
+                .filter(and_(models.Request.user_id == self.user_id, models.Request.id == req_id)).first()
+            data.__dict__["expert"] = \
+                data.__dict__["expert"].__dict__["name"]
+            data.__dict__["region_operator"] = \
+                data.__dict__["region_operator"].__dict__["reg_oper_name"]
+            return data
+        except:
+            return None
+
+    def get_all_requests(self, limit: int = 10) -> Optional[Dict[str, schemas.Request]]:
         try:
             data = self.session.query(models.Request) \
                 .options(
@@ -121,21 +139,30 @@ class RequestService:
             return None
 
     async def detect_trash_on_photo(self, file: UploadFile = File(...)) -> Dict:
-        # if file.content_type not in ["image/jpeg", "image/png", "image/bmp", "image/bmp"]:
         if file.content_type.split("/")[0] != "image":
             raise HTTPException(status_code=400, detail="Invalid file type")
-        file.filename = utils.create_sourse.rename_photo(self.user_id, file.filename)
+        file.filename = utils.create_source.rename_photo(self.user_id, file.filename)
         os.chdir(os.path.join("..", "source_users_photo"))
-        utils.create_sourse.create_dir(str(self.user_id))
+        utils.create_source.create_dir(str(self.user_id))
         file_location = os.path.join("..", "source_users_photo", str(self.user_id), file.filename)
         async with aiofiles.open(file_location, 'wb') as f:
-            contents = file.file.read()
-            await f.write(contents)
-
-        return {
-            "name_photo": file.filename,
-            "trash_classes": "1, 2, 3"
-        }
+            await f.write(file.file.read())
+        find_garbage = GarbageDetection(os.path.join("..", "app", "best.pt")).garbage_detection(file_location,
+                                                                                                file_location)
+        if find_garbage is not None:
+            if find_garbage[1] != 0:
+                user = self.session.query(models.User).get(self.user_id)
+                user.amount_garbage += find_garbage[1]
+                self.session.commit()
+                self.session.refresh(user)
+            return {
+                "name_photo": file.filename,
+                "trash_classes": find_garbage[0]
+            }
+        else:
+            if os.path.isfile(file_location):
+                os.remove(file_location)
+            raise HTTPException(status_code=404, detail="Trash not found")
 
     def download_photo(self, upload_name: str):
         os.chdir(os.path.join("..", "source_users_photo"))

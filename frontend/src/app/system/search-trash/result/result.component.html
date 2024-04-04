@@ -1,0 +1,46 @@
+<div class="stepper">
+    <div class="stepper-step">1</div>
+    <div class="stepper-line"></div>
+    <div class="stepper-step">2</div>
+    <div class="stepper-line"></div>
+    <div style="border: 3px solid #61895E;" class="stepper-step">3</div>
+</div>
+<div class="results">
+    <div class="results-street">
+           <p style="margin-left:1%;">{{sentAdress}}</p> 
+        <div class="results-slider">
+            <img class="slider-img" [src]="image_src">
+        </div>
+    </div>
+    <div id="map" class="results-map"></div>
+</div>
+
+<div class="result-btns">
+    <div (click)="open2()" class="result-btn">Сообщить об ошибке</div>
+    <div (click)="open()" class="result-btn">Готово</div>
+  
+</div>
+
+<div class="cont">
+    <div class="button-res">
+        
+        <div *ngIf="isOpen" class="modal">
+    
+            <div class="modal-content">
+                <p>Спасибо за то, что неравнодушны к экологической повестке своего города!</p>
+                <p>Вы создали заявку, следить за статусом которой можете в своем профиле.</p>
+                <a [routerLink]="['/system', 'account','personal-area']" class="report-btn" style="text-decoration: none;">Ок</a>
+            </div>
+        
+        </div>
+        <div *ngIf="isOpen2" class="modal">
+            
+            <div class="modal-content">
+                <span span (click)="open2()" class="close">&times;</span>
+                <div class="classification-title">Сообщение об ошибке</div>
+                <textarea class="textarea-report"></textarea>
+                <div class="report-btn">Отправить</div>
+            </div>
+        </div>
+    </div>
+</div>

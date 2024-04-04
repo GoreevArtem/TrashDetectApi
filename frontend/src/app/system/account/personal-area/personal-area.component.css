@@ -1,0 +1,234 @@
+.block-area {
+    display: block;
+    width: 947px;
+    height: 211px;
+    border: 2px solid #405D3E;
+    border-radius: 8px;
+    margin: 41px 0 26px 30px;
+    font-family: 'Freeride';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+}
+
+.block-text {
+    border-bottom: 2px solid #405D3E;
+    margin: 0 24px 0 25px;
+    width: 899.01px;
+    display: flex;
+    flex-direction: row;
+}
+
+.txt1 {
+    color: black;
+}
+
+#oneTxt {
+    margin: 25px 0 18px 0;
+}
+
+#twoTxt {
+    margin: 17.78px 0 18px 0;
+}
+
+#threeTxt {
+    margin: 25px 0 18px 279px;
+}
+
+#fourTxt {
+    margin: 17.78px 0 18px 36px;
+}
+
+#fiveTxt {
+    margin: 25px 0 18px 25px;
+}
+
+#sixTxt {
+    margin: 25px 0 18px 805px;
+    position:absolute;
+}
+
+.txt2 {
+    color: #405D3E;
+    font-weight: 600;
+}
+
+.button-acc {
+
+    background: #7FB07C;
+    border-radius: 10px;
+    width: 294px;
+    height: 46px;
+    margin: 26px 0 200px 29px;
+}
+
+#button-text {
+    font-family: 'Freeride';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    color: white;
+    text-align: center;
+    padding: 7px 23px;
+}
+
+.login{
+    width: 443px;
+    height: 430px;
+    background: #C7F3C3;
+    border-radius: 10px;
+    padding: 27px 38px;
+    margin: 0 auto;
+}
+.login-title{
+    font-family: 'Freeride';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 38px;
+    text-align: center;
+    color: #000000;
+}
+
+.login-field__title{
+    font-family: 'Freeride';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 33px;
+    color:black;
+    margin: 8px 0;
+}
+.login-field__input{
+    height: 43px;
+    width: 415px;
+    padding: 8px 14px;
+    background: #FFFFFF;
+    border-radius: 8px;
+    color: black;
+    border: none;
+    font-family: 'Freeride';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 27px;
+    margin-bottom: 20px;
+}
+button{
+    
+    width: 178px;
+    height: 46px;
+    display: flex;
+    background: #7FB07C;
+    border-radius: 10px;
+    color: #FFFFFF;
+    margin: 24px auto 0 auto;
+    cursor: pointer;
+}
+.login-forgot-pass{
+    font-family: 'Freeride';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 27px;
+    color: #000000;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+}
+
+a{
+    text-decoration: none;
+    color: #fff;
+}
+
+input:focus{outline: 2px solid #7FB07C}
+
+span{
+    font-family: 'Freeride';
+    font-size: 20px;
+    color: red;
+    font-weight: 600;
+}
+
+.login-btn {
+    
+    font-family: 'Freeride';
+    font-size: 26px;
+    padding:7px 34px;
+}
+
+#form1
+{
+    width: 947px;
+    justify-content: center;
+    margin: 41px 0 26px 30px;
+    margin-bottom: 100px;
+}
+
+.login2{
+    width: 443px;
+    height: 264px;
+    background: #C7F3C3;
+    border-radius: 10px;
+    padding: 27px 38px;
+    margin: 0 auto;
+}
+
+.cont{
+    margin:0 110px;
+    position: fixed;
+}
+
+.button-res {
+    display: inline-block;
+    margin-top: 40px;
+    flex-direction: row;
+    justify-content:space-between;
+}
+
+.modal-content {
+    background-color: #C7F3C3;
+    margin: 319px 0 0 394px;
+    position: absolute;
+    padding: 20px;
+   
+    height: auto;
+    border-radius: 10px;
+    width: 655px;
+    font-family: 'Freeride';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 26px;
+    line-height: 32px;
+    color: #000000;
+    text-align: center;
+    box-shadow: 0 0 10px 10px white;
+}
+
+.modal {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.report-btn {
+    height: 42px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Freeride';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    color: #FFFFFF;
+    background: #7FB07C;
+    border-radius: 10px;
+    width: 100px;
+    cursor: pointer;
+    margin: 10px auto;
+}
